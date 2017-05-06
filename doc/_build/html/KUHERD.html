@@ -1,0 +1,716 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>KUHERD package &#8212; KUHERD 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    './',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="KUHERD.Experiments package" href="KUHERD.Experiments.html" />
+    <link rel="prev" title="Welcome to KUHERD’s documentation!" href="index.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="kuherd-package">
+<h1>KUHERD package<a class="headerlink" href="#kuherd-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="subpackages">
+<h2>Subpackages<a class="headerlink" href="#subpackages" title="Permalink to this headline">¶</a></h2>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="KUHERD.Experiments.html">KUHERD.Experiments package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#submodules">Submodules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#module-KUHERD.Experiments.MultiDT">KUHERD.Experiments.MultiDT module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#module-KUHERD.Experiments.MultiLR">KUHERD.Experiments.MultiLR module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#module-KUHERD.Experiments.MultiNB">KUHERD.Experiments.MultiNB module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#module-KUHERD.Experiments.MultiRF">KUHERD.Experiments.MultiRF module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#module-KUHERD.Experiments.MultiSVM">KUHERD.Experiments.MultiSVM module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="KUHERD.Experiments.html#module-KUHERD.Experiments">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-KUHERD.FeatureSelector">
+<span id="kuherd-featureselector-module"></span><h2>KUHERD.FeatureSelector module<a class="headerlink" href="#module-KUHERD.FeatureSelector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KUHERD.FeatureSelector.FeatureSelector">
+<em class="property">class </em><code class="descclassname">KUHERD.FeatureSelector.</code><code class="descname">FeatureSelector</code><span class="sig-paren">(</span><em>scoring_function</em>, <em>kbest</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/FeatureSelector.html#FeatureSelector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.FeatureSelector.FeatureSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="KUHERD.FeatureSelector.FeatureSelector.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>Y</em>, <em>label_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/FeatureSelector.html#FeatureSelector.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.FeatureSelector.FeatureSelector.fit" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.FeatureSelector.FeatureSelector.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/FeatureSelector.html#FeatureSelector.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.FeatureSelector.FeatureSelector.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Transforms the data, retaining only features learned in the &#8220;fit&#8221; process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>numpy matrix</em>) &#8211; The data matrix.</li>
+<li><strong>y</strong> (<em>integer list</em>) &#8211; The labels for the data.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">Transformed data matrix.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(numpy matrix)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-KUHERD.HerdVectorizer">
+<span id="kuherd-herdvectorizer-module"></span><h2>KUHERD.HerdVectorizer module<a class="headerlink" href="#module-KUHERD.HerdVectorizer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer">
+<em class="property">class </em><code class="descclassname">KUHERD.HerdVectorizer.</code><code class="descname">HerdVectorizer</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Main class responsible for vectorization of the text data. This class is extremely configurable, with many
+options for each preprocessing behavior, bigrams, stemmers, stopwords, and feature selection. Use of this
+class is done in the following manner:
+- Set configuration options for preproc_config, bigram_config, stemmer, stopwords, and feature selection.
+- Train the vectorizer on a set of documents and their corresponding labels.
+- After training is complete, the documents may be given to the transform function to convert to TFIDF form.</p>
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.create_bigram_index_map">
+<code class="descname">create_bigram_index_map</code><span class="sig-paren">(</span><em>tokenized_docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.create_bigram_index_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.create_bigram_index_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates a mapping from each bigram to a column index.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tokenized_docs</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a single long string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dictionary where keys are tokens, values are the index into a feature matrix.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(dictionary)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.create_token_index_map">
+<code class="descname">create_token_index_map</code><span class="sig-paren">(</span><em>tokenized_docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.create_token_index_map"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.create_token_index_map" title="Permalink to this definition">¶</a></dt>
+<dd><p>Given the tokenized documents, finds all unique tokens and forms an index map</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tokenized_docs</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a single long string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Dictionary where keys are tokens, values are the index into a feature matrix.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(dictionary)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.filter_docs">
+<em class="property">static </em><code class="descname">filter_docs</code><span class="sig-paren">(</span><em>tokenized_docs</em>, <em>tok_index_map</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.filter_docs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.filter_docs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Filters tokenized documents, removing all tokens which are not recognized by the specified token index map.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>tokenized_docs</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a single long string</li>
+<li><strong>tok_index_map</strong> (<em>dictionary</em>) &#8211; A mapping from tokens to their index in the feature matrix.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of documents, where each document is a list of (filtered) tokens.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.form_bigram_count_matrix">
+<code class="descname">form_bigram_count_matrix</code><span class="sig-paren">(</span><em>tokenized_docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.form_bigram_count_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.form_bigram_count_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Calculates a bigram count matrix from a list of tokenized documents.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tokenized_docs</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a single long string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A sparse count matrix in COO format.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(sparse numpy matrix)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.form_count_matrix">
+<code class="descname">form_count_matrix</code><span class="sig-paren">(</span><em>tokenized_docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.form_count_matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.form_count_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Forms the count matrix from the tokenized documents</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>tokenized_docs</strong> (<em>list</em>) &#8211; A list of lists representing the tokenized documents. Each document is a list of tokens.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A sparse count matrix in COO format.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(sparse numpy matrix)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.getConfig">
+<code class="descname">getConfig</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.getConfig"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.getConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the complete configuration needed to build a vectorizer.</p>
+<p>Returns the complete configuration needed to build a vectorizer. Note that the config returned may only be used
+to train a new vectorizer. The config does NOT give model persistance.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.get_bigram_config">
+<code class="descname">get_bigram_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.get_bigram_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.get_bigram_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the bigram configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.get_preproc_config">
+<code class="descname">get_preproc_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.get_preproc_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.get_preproc_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Retrieve the preprocessor configuration.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.lancaster_stemmer">
+<em class="property">static </em><code class="descname">lancaster_stemmer</code><span class="sig-paren">(</span><em>docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.lancaster_stemmer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.lancaster_stemmer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Lancaster stemming algorithm</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.porter_stemmer">
+<em class="property">static </em><code class="descname">porter_stemmer</code><span class="sig-paren">(</span><em>docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.porter_stemmer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.porter_stemmer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Porter stemming algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.set_bigram_config">
+<code class="descname">set_bigram_config</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.set_bigram_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.set_bigram_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the bigram configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.set_bigrams">
+<code class="descname">set_bigrams</code><span class="sig-paren">(</span><em>bigrams</em>, <em>bigram_window_size</em>, <em>bigram_filter_size</em>, <em>bigram_nbest</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.set_bigrams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.set_bigrams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the bigram configuration.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.set_feature_selector">
+<code class="descname">set_feature_selector</code><span class="sig-paren">(</span><em>scoring_func</em>, <em>kbest</em>, <em>multi_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.set_feature_selector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.set_feature_selector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the feature selection configuration values.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.set_preproc_config">
+<code class="descname">set_preproc_config</code><span class="sig-paren">(</span><em>name</em>, <em>value</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.set_preproc_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.set_preproc_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the preprocessor configuration value.</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.set_stemmer">
+<code class="descname">set_stemmer</code><span class="sig-paren">(</span><em>the_stemmer</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.set_stemmer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.set_stemmer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Set the stemmer configuration values.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.snowball_stemmer">
+<em class="property">static </em><code class="descname">snowball_stemmer</code><span class="sig-paren">(</span><em>docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.snowball_stemmer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.snowball_stemmer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Snowball stemming algorithm</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.tokenize_docs">
+<code class="descname">tokenize_docs</code><span class="sig-paren">(</span><em>docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.tokenize_docs"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.tokenize_docs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Breaks each document down into a list of words(tokens).</p>
+<p>Converts a list of documents(each document is given as a single string) and converts them to their tokenized
+form in the following manner(some steps may be skipped if configured as such in the configuration settings)</p>
+<blockquote>
+<div><ul class="simple">
+<li>break document into tokens</li>
+<li>remove punctuation</li>
+<li>stem tokens</li>
+</ul>
+</div></blockquote>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>docs</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a single long string</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The tokenized documents as a list of lists, each item of the outer list is a document, which is represented as a list of words.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(list)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.train">
+<code class="descname">train</code><span class="sig-paren">(</span><em>docs</em>, <em>y</em>, <em>label_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.train"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.train" title="Permalink to this definition">¶</a></dt>
+<dd><p>Takes a list of documents, and the corresponding labels and trains the preprocessor(including feature selection).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>docs</strong> (<em>list</em>) &#8211; A list of documents, where each document is represented as a string.</li>
+<li><strong>y</strong> (<em>list</em>) &#8211; A list of integers representing the label for each document.</li>
+<li><strong>label_set</strong> (<em>str</em>) &#8211; Specifies the label set so that the input &#8216;y&#8217; may be interpreted. Valiud entries are either &#8216;purpose&#8217; or &#8216;field&#8217;.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<p>&#64;param docs The list of documents
+&#64;param y A vector of labels which correspond to each document</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.HerdVectorizer.HerdVectorizer.transform_data">
+<code class="descname">transform_data</code><span class="sig-paren">(</span><em>docs</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#HerdVectorizer.transform_data"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.HerdVectorizer.transform_data" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tranforms documents into a sparse matrix.</p>
+<dl class="docutils">
+<dt>Must be called after the preprocessor has been trained on some data. Process is as follows:</dt>
+<dd>-tokenize documents
+-search for bigrams
+-transform to TFIDF representation
+-select features</dd>
+</dl>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>docs</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a string.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">A sparse CSR formatted matrix, each row corresponds to a document, ordering of documents is preserved.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(sparse numpy matrix)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="KUHERD.HerdVectorizer.main">
+<code class="descclassname">KUHERD.HerdVectorizer.</code><code class="descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/HerdVectorizer.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.HerdVectorizer.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+<div class="section" id="module-KUHERD.LabelSets">
+<span id="kuherd-labelsets-module"></span><h2>KUHERD.LabelSets module<a class="headerlink" href="#module-KUHERD.LabelSets" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-KUHERD.LabelTransformations">
+<span id="kuherd-labeltransformations-module"></span><h2>KUHERD.LabelTransformations module<a class="headerlink" href="#module-KUHERD.LabelTransformations" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="KUHERD.LabelTransformations.label2mat">
+<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">label2mat</code><span class="sig-paren">(</span><em>x</em>, <em>label_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#label2mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.label2mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a vector of integers to a matrix of of zero-one valued columns.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label_vec</strong> (<em>list</em>) &#8211; A vector containing integer values mapping to members of the label_type.</li>
+<li><strong>label_type</strong> (<em>str</em>) &#8211; Specifies label_type of label_vec, either &#8216;purpose&#8217; and &#8216;field&#8217;.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A matrix of zero-one valued columns.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(numpy matrix)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="KUHERD.LabelTransformations.mat2vec">
+<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">mat2vec</code><span class="sig-paren">(</span><em>M</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#mat2vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.mat2vec" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a zero-one valued label matrix to an integer valued label vector.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>M</strong> (<em>numpy mat</em>) &#8211; A zero-one valued label matrix.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="KUHERD.LabelTransformations.vec2mat">
+<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">vec2mat</code><span class="sig-paren">(</span><em>x</em>, <em>label_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#vec2mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.vec2mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a vector of integers to a matrix of of zero-one valued columns.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>x</strong> (<em>list</em>) &#8211; A vector containing integer values mapping to members of the label_type.</li>
+<li><strong>label_type</strong> (<em>str</em>) &#8211; Specifies label_type of label_vec, either &#8216;purpose&#8217; and &#8216;field&#8217;.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A matrix of zero-one valued columns.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(numpy matrix)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="KUHERD.LabelTransformations.vec2string">
+<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">vec2string</code><span class="sig-paren">(</span><em>label_vec</em>, <em>label_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#vec2string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.vec2string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts vector containing integers to a string representation using the label set dictionaries.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>label_vec</strong> (<em>list</em>) &#8211; A vector containing integer values mapping to members of the label_type.</li>
+<li><strong>label_type</strong> (<em>str</em>) &#8211; Specifies label_type of label_vec, either &#8216;purpose&#8217; and &#8216;field&#8217;.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">A list of strings that are members oif the label_type.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">(list)</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="module-KUHERD.Models">
+<span id="kuherd-models-module"></span><h2>KUHERD.Models module<a class="headerlink" href="#module-KUHERD.Models" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KUHERD.Models.ClassificationModel">
+<em class="property">class </em><code class="descclassname">KUHERD.Models.</code><code class="descname">ClassificationModel</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#ClassificationModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.ClassificationModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>This class is a wrapper for a model which targets either the Purpose or Field category set.</p>
+<dl class="method">
+<dt id="KUHERD.Models.ClassificationModel.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>Y</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#ClassificationModel.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.ClassificationModel.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the model.</p>
+<p>Fitting or &#8220;training&#8221; must be done before the model is able to make predictions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>X</strong> (<em>numpy matrix</em>) &#8211; Training samples.</li>
+<li><strong>Y</strong> (<em>numpy matrix</em>) &#8211; Training labels.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">No return value.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">None</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.Models.ClassificationModel.get_config">
+<code class="descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#ClassificationModel.get_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.ClassificationModel.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration used to build this model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary containing target label set, internal model configuration, and model name.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.Models.ClassificationModel.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#ClassificationModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.ClassificationModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>numpy matrix</em>) &#8211; Training samples.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">predicted label values.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">numpy matrix</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="KUHERD.Models.PurposeFieldModel">
+<em class="property">class </em><code class="descclassname">KUHERD.Models.</code><code class="descname">PurposeFieldModel</code><span class="sig-paren">(</span><em>config</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#PurposeFieldModel"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.PurposeFieldModel" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<p>Constructor for model.</p>
+<p>Takes configurations for building the vectorizers and classification models. The &#8216;purpose&#8217; and &#8216;field&#8217; categories each get their own
+vectorizer and model. The vectorizer configs can be retrieved from HerdVectorizer class, the model configs may be retrieved from the
+ClassificationModel class.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>config</strong> (<em>dictionary</em>) &#8211; Dictionary containing the following configuration: &#8216;purpose_vectorizer&#8217;, &#8216;field_vectorizer&#8217;, &#8216;purpose_model&#8217;, &#8216;field_model&#8217;.</td>
+</tr>
+</tbody>
+</table>
+<dl class="method">
+<dt id="KUHERD.Models.PurposeFieldModel.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>abstracts</em>, <em>Y_purpose</em>, <em>Y_field</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#PurposeFieldModel.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.PurposeFieldModel.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the model.</p>
+<p>Input arguments must all be the same length.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>abstracts</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a list of words.</li>
+<li><strong>Y_purpose</strong> (<em>list</em>) &#8211; A list of labels of the &#8216;purpose&#8217; variety.</li>
+<li><strong>Y_field</strong> (<em>list</em>) &#8211; A list of labels of the &#8216;field&#8217; variety.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.Models.PurposeFieldModel.get_config">
+<code class="descname">get_config</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#PurposeFieldModel.get_config"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.PurposeFieldModel.get_config" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the configuration used to build this model.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body">dictionary containing the following keys, &#8216;purpose_vectorizer&#8217;, &#8216;field_vectorizer&#8217;, &#8216;purpose_model&#8217;, &#8216;field_model&#8217;. Each entry is the configuration required to build the model.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">dict</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.Models.PurposeFieldModel.predict">
+<code class="descname">predict</code><span class="sig-paren">(</span><em>abstracts</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/Models.html#PurposeFieldModel.predict"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.Models.PurposeFieldModel.predict" title="Permalink to this definition">¶</a></dt>
+<dd><p>Make predictions on the input data.</p>
+<p>The list of documents input is vectorized and input to the prediction model, which generates label predictions.
+This process is done separately for generating both purpose and field label predictions.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>abstracts</strong> (<em>list</em>) &#8211; A list of documents, each document is represented as a list of words.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">dictionary containing two lists of predictions, dictionary keys are &#8216;purpose&#8217; and &#8216;field&#8217;.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">dictionary</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-KUHERD.MultiFeatureSelector">
+<span id="kuherd-multifeatureselector-module"></span><h2>KUHERD.MultiFeatureSelector module<a class="headerlink" href="#module-KUHERD.MultiFeatureSelector" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KUHERD.MultiFeatureSelector.MultiFeatureSelector">
+<em class="property">class </em><code class="descclassname">KUHERD.MultiFeatureSelector.</code><code class="descname">MultiFeatureSelector</code><span class="sig-paren">(</span><em>scoring_function</em>, <em>kbest</em>, <em>multi_integrator</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/MultiFeatureSelector.html#MultiFeatureSelector"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.MultiFeatureSelector.MultiFeatureSelector" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="KUHERD.MultiFeatureSelector.MultiFeatureSelector.fit">
+<code class="descname">fit</code><span class="sig-paren">(</span><em>X</em>, <em>Y</em>, <em>label_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/MultiFeatureSelector.html#MultiFeatureSelector.fit"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.MultiFeatureSelector.MultiFeatureSelector.fit" title="Permalink to this definition">¶</a></dt>
+<dd><p>Trains the feature selection process</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>X</strong> (<em>numpy matrix</em>) &#8211; Training samples.</li>
+<li><strong>Y</strong> (<em>numpy matrix</em>) &#8211; Training Labels.</li>
+<li><strong>label_set</strong> (<em>str</em>) &#8211; Denotes if label set is of the &#8216;purpose&#8217; or &#8216;field&#8217; type.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.MultiFeatureSelector.MultiFeatureSelector.transform">
+<code class="descname">transform</code><span class="sig-paren">(</span><em>X</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/MultiFeatureSelector.html#MultiFeatureSelector.transform"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.MultiFeatureSelector.MultiFeatureSelector.transform" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tranforms the data by selecting the features learned in the training or &#8220;fit&#8221; process.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>X</strong> (<em>numpy matrix</em>) &#8211; Data samples to run feature selection on.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Data with only the selected features.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">(numpy matrix)</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-KUHERD">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-KUHERD" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">KUHERD package</a><ul>
+<li><a class="reference internal" href="#subpackages">Subpackages</a></li>
+<li><a class="reference internal" href="#submodules">Submodules</a></li>
+<li><a class="reference internal" href="#module-KUHERD.FeatureSelector">KUHERD.FeatureSelector module</a></li>
+<li><a class="reference internal" href="#module-KUHERD.HerdVectorizer">KUHERD.HerdVectorizer module</a></li>
+<li><a class="reference internal" href="#module-KUHERD.LabelSets">KUHERD.LabelSets module</a></li>
+<li><a class="reference internal" href="#module-KUHERD.LabelTransformations">KUHERD.LabelTransformations module</a></li>
+<li><a class="reference internal" href="#module-KUHERD.Models">KUHERD.Models module</a></li>
+<li><a class="reference internal" href="#module-KUHERD.MultiFeatureSelector">KUHERD.MultiFeatureSelector module</a></li>
+<li><a class="reference internal" href="#module-KUHERD">Module contents</a></li>
+</ul>
+</li>
+</ul>
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="index.html" title="previous chapter">Welcome to KUHERD&#8217;s documentation!</a></li>
+      <li>Next: <a href="KUHERD.Experiments.html" title="next chapter">KUHERD.Experiments package</a></li>
+  </ul></li>
+</ul>
+</div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/KUHERD.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Joseph St.Amand.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+      |
+      <a href="_sources/KUHERD.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>

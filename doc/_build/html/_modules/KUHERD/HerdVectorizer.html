@@ -1,0 +1,520 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>KUHERD.HerdVectorizer &#8212; KUHERD 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for KUHERD.HerdVectorizer</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="k">import</span> <span class="n">BigramAssocMeasures</span><span class="p">,</span> <span class="n">TrigramAssocMeasures</span>
+<span class="kn">from</span> <span class="nn">nltk.collocations</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="k">import</span> <span class="n">wordpunct_tokenize</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="k">import</span> <span class="n">TfidfTransformer</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">from</span> <span class="nn">KUHERD.FeatureSelector</span> <span class="k">import</span> <span class="n">FeatureSelector</span>
+<span class="kn">from</span> <span class="nn">KUHERD.MultiFeatureSelector</span> <span class="k">import</span> <span class="n">MultiFeatureSelector</span>
+<span class="kn">from</span> <span class="nn">gensim</span> <span class="k">import</span> <span class="n">utils</span>
+
+
+<div class="viewcode-block" id="HerdVectorizer"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer">[docs]</a><span class="k">class</span> <span class="nc">HerdVectorizer</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot; Main class responsible for vectorization of the text data. This class is extremely configurable, with many</span>
+<span class="sd">        options for each preprocessing behavior, bigrams, stemmers, stopwords, and feature selection. Use of this</span>
+<span class="sd">        class is done in the following manner:</span>
+<span class="sd">        - Set configuration options for preproc_config, bigram_config, stemmer, stopwords, and feature selection.</span>
+<span class="sd">        - Train the vectorizer on a set of documents and their corresponding labels.</span>
+<span class="sd">        - After training is complete, the documents may be given to the transform function to convert to TFIDF form.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Initilize class with specific configuration options.&quot;&quot;&quot;</span>
+
+        <span class="c1"># configuration for learning</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;preproc_config&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;bigram_config&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;feature_selector&#39;</span><span class="p">]</span>
+
+        <span class="c1"># parameters learned in training</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tok_index_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tfidf_config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigram_index_map</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="c1"># stopwords always the same</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">stopwords</span> <span class="o">=</span> <span class="n">nltk</span><span class="o">.</span><span class="n">corpus</span><span class="o">.</span><span class="n">stopwords</span><span class="o">.</span><span class="n">words</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+
+        <span class="c1"># feature selection mechanism</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector_config</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span> <span class="o">=</span> <span class="n">MultiFeatureSelector</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">feature_selector_config</span><span class="p">[</span><span class="s1">&#39;fselect&#39;</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector_config</span><span class="p">[</span><span class="s1">&#39;kbest&#39;</span><span class="p">],</span>
+                                                         <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector_config</span><span class="p">[</span><span class="s1">&#39;multi_integrator&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="c1"># gets the current config, VERY IMPORTANT: this is only the configuration to train the configuration,</span>
+    <span class="c1"># it does NOT give model persistance!</span>
+<div class="viewcode-block" id="HerdVectorizer.getConfig"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.getConfig">[docs]</a>    <span class="k">def</span> <span class="nf">getConfig</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Retrieve the complete configuration needed to build a vectorizer.</span>
+
+<span class="sd">        Returns the complete configuration needed to build a vectorizer. Note that the config returned may only be used</span>
+<span class="sd">        to train a new vectorizer. The config does NOT give model persistance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;preproc_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;bigram_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;trigram_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">trigram_config</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;feature_selector&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span>
+        <span class="k">return</span> <span class="n">config</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.set_feature_selector"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.set_feature_selector">[docs]</a>    <span class="k">def</span> <span class="nf">set_feature_selector</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">scoring_func</span><span class="p">,</span> <span class="n">kbest</span><span class="p">,</span> <span class="n">multi_type</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the feature selection configuration values. &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">multi_type</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span> <span class="o">=</span> <span class="n">MultiFeatureSelector</span><span class="p">(</span><span class="n">scoring_func</span><span class="p">,</span> <span class="n">kbest</span><span class="p">,</span> <span class="n">multi_type</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span> <span class="o">=</span> <span class="n">FeatureSelector</span><span class="p">(</span><span class="n">scoring_func</span><span class="p">,</span> <span class="n">kbest</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.set_stemmer"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.set_stemmer">[docs]</a>    <span class="k">def</span> <span class="nf">set_stemmer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">the_stemmer</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the stemmer configuration values.&quot;&quot;&quot;</span>
+        <span class="n">valid_stemmers</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;none&#39;</span><span class="p">,</span> <span class="s1">&#39;porter&#39;</span><span class="p">,</span> <span class="s1">&#39;lancaster&#39;</span><span class="p">,</span> <span class="s1">&#39;snowball&#39;</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">the_stemmer</span> <span class="ow">in</span> <span class="n">valid_stemmers</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">the_stemmer</span>
+        <span class="k">elif</span> <span class="n">the_stemmer</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Invalid Stemmer Given: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">the_stemmer</span><span class="p">)</span>
+            <span class="n">exit</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.set_preproc_config"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.set_preproc_config">[docs]</a>    <span class="k">def</span> <span class="nf">set_preproc_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the preprocessor configuration value.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.set_bigrams"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.set_bigrams">[docs]</a>    <span class="k">def</span> <span class="nf">set_bigrams</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bigrams</span><span class="p">,</span> <span class="n">bigram_window_size</span><span class="p">,</span> <span class="n">bigram_filter_size</span><span class="p">,</span> <span class="n">bigram_nbest</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the bigram configuration.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigrams&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bigrams</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_window_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bigram_window_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_filter_size&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bigram_filter_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_nbest&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">bigram_nbest</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.set_bigram_config"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.set_bigram_config">[docs]</a>    <span class="k">def</span> <span class="nf">set_bigram_config</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Set the bigram configuration.&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">value</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.get_preproc_config"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.get_preproc_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_preproc_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the preprocessor configuration.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.get_bigram_config"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.get_bigram_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_bigram_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Retrieve the bigram configuration.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.train"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.train">[docs]</a>    <span class="k">def</span> <span class="nf">train</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label_set</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Takes a list of documents, and the corresponding labels and trains the preprocessor(including feature selection).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            docs (list): A list of documents, where each document is represented as a string.</span>
+<span class="sd">            y (list): A list of integers representing the label for each document.</span>
+<span class="sd">            label_set (str): Specifies the label set so that the input &#39;y&#39; may be interpreted. Valiud entries are either &#39;purpose&#39; or &#39;field&#39;.</span>
+
+<span class="sd">        @param docs The list of documents</span>
+<span class="sd">        @param y A vector of labels which correspond to each document</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenize_docs</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tok_index_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_token_index_map</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+
+        <span class="c1"># now filter the documents on the new token-index map</span>
+        <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_docs</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tok_index_map</span><span class="p">)</span>
+
+        <span class="n">csr_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_count_matrix</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigrams&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bigram_index_map</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">create_bigram_index_map</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+            <span class="n">bigram_count_csr_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_bigram_count_matrix</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+            <span class="n">csr_mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">csr_mat</span><span class="p">,</span> <span class="n">bigram_count_csr_mat</span><span class="p">])</span>
+
+        <span class="c1"># now we find the TF-IDF representation</span>
+        <span class="n">tfidf_transformer</span> <span class="o">=</span> <span class="n">TfidfTransformer</span><span class="p">()</span>
+        <span class="n">tfidf_transformer</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">csr_mat</span><span class="p">)</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">tfidf_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">csr_mat</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">label_set</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">tfidf_config</span><span class="p">[</span><span class="s1">&#39;transformer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">tfidf_transformer</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.transform_data"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.transform_data">[docs]</a>    <span class="k">def</span> <span class="nf">transform_data</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Tranforms documents into a sparse matrix. </span>
+
+<span class="sd">        Must be called after the preprocessor has been trained on some data. Process is as follows:</span>
+<span class="sd">            -tokenize documents</span>
+<span class="sd">            -search for bigrams</span>
+<span class="sd">            -transform to TFIDF representation</span>
+<span class="sd">            -select features</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            docs (list): A list of documents, each document is represented as a string.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (sparse numpy matrix): A sparse CSR formatted matrix, each row corresponds to a document, ordering of documents is preserved.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># tokenize and vectorize using bag of words representation</span>
+        <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tokenize_docs</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+
+        <span class="c1"># extract individual words</span>
+        <span class="n">filtered_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">filter_docs</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">tok_index_map</span><span class="p">)</span>
+        <span class="n">csr_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_count_matrix</span><span class="p">(</span><span class="n">filtered_docs</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span>
+
+        <span class="c1"># search for bigrams</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigrams&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">bigram_count_csr_mat</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">form_bigram_count_matrix</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+            <span class="n">csr_mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">hstack</span><span class="p">([</span><span class="n">csr_mat</span><span class="p">,</span> <span class="n">bigram_count_csr_mat</span><span class="p">])</span>
+
+        <span class="c1"># now transform into TF-IDF representation</span>
+        <span class="n">tfidf_transformer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tfidf_config</span><span class="p">[</span><span class="s1">&#39;transformer&#39;</span><span class="p">]</span>
+        <span class="n">X</span> <span class="o">=</span> <span class="n">tfidf_transformer</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">csr_mat</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span> <span class="o">!=</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">X</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">feature_selector</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">X</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HerdVectorizer.filter_docs"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.filter_docs">[docs]</a>    <span class="k">def</span> <span class="nf">filter_docs</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">,</span> <span class="n">tok_index_map</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Filters tokenized documents, removing all tokens which are not recognized by the specified token index map.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokenized_docs (list): A list of documents, each document is represented as a single long string</span>
+<span class="sd">            tok_index_map (dictionary): A mapping from tokens to their index in the feature matrix.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (list): A list of documents, where each document is a list of (filtered) tokens.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">filtered_docs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">tokenized_docs</span><span class="p">:</span>
+            <span class="n">new_doc</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">tok_index_map</span><span class="p">:</span>
+                    <span class="n">new_doc</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token</span><span class="p">)</span>
+            <span class="n">filtered_docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">new_doc</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">filtered_docs</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.create_bigram_index_map"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.create_bigram_index_map">[docs]</a>    <span class="k">def</span> <span class="nf">create_bigram_index_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenized_docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Creates a mapping from each bigram to a column index.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokenized_docs (list): A list of documents, each document is represented as a single long string</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (dictionary): Dictionary where keys are tokens, values are the index into a feature matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">flattened_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">tokenized_docs</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+
+        <span class="n">finder</span> <span class="o">=</span> <span class="n">BigramCollocationFinder</span><span class="o">.</span><span class="n">from_words</span><span class="p">(</span><span class="n">flattened_tokens</span><span class="p">)</span>
+        <span class="n">finder</span><span class="o">.</span><span class="n">apply_freq_filter</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_filter_size&#39;</span><span class="p">])</span>  <span class="c1"># key to getting good results</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;pmi&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">pmi</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;chi_sq&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">chi_sq</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;jaccard&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">jaccard</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;likelihood_ratio&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">likelihood_ratio</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;mi_like&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">mi_like</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;poisson_stirling&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">poisson_stirling</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;student_t&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">student_t</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;raw_freq&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">raw_freq</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;phi_sq&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">phi_sq</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_measure&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;dice&#39;</span><span class="p">:</span>
+            <span class="n">bigram_measure</span> <span class="o">=</span> <span class="n">BigramAssocMeasures</span><span class="o">.</span><span class="n">dice</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Invalid bigram_measure given!&#39;</span><span class="p">)</span>
+
+        <span class="n">nbest_bigrams</span> <span class="o">=</span> <span class="n">finder</span><span class="o">.</span><span class="n">nbest</span><span class="p">(</span><span class="n">bigram_measure</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_config</span><span class="p">[</span><span class="s1">&#39;bigram_nbest&#39;</span><span class="p">])</span>
+
+        <span class="n">bigram_index</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">bigram</span> <span class="ow">in</span> <span class="n">nbest_bigrams</span><span class="p">:</span>
+            <span class="n">bigram_index</span><span class="p">[</span><span class="n">bigram</span><span class="p">]</span> <span class="o">=</span> <span class="n">i</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">bigram_index</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.form_bigram_count_matrix"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.form_bigram_count_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">form_bigram_count_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenized_docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Calculates a bigram count matrix from a list of tokenized documents.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokenized_docs (list): A list of documents, each document is represented as a single long string</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (sparse numpy matrix): A sparse count matrix in COO format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">doc_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">bigram_index</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="n">doc_num</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">tokenized_docs</span><span class="p">:</span>
+            <span class="n">finder</span> <span class="o">=</span> <span class="n">BigramCollocationFinder</span><span class="o">.</span><span class="n">from_words</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">bigram</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">finder</span><span class="o">.</span><span class="n">ngram_fd</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+                <span class="k">if</span> <span class="n">bigram</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">bigram_index_map</span><span class="p">:</span>
+                    <span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                    <span class="n">doc_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_num</span><span class="p">)</span>
+                    <span class="n">bigram_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigram_index_map</span><span class="p">[</span><span class="n">bigram</span><span class="p">])</span>
+            <span class="n">doc_num</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="n">data</span><span class="p">,</span> <span class="p">(</span><span class="n">doc_index</span><span class="p">,</span> <span class="n">bigram_index</span><span class="p">)),</span>
+                                       <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bigram_index_map</span><span class="p">)),</span>
+                                       <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span><span class="o">.</span><span class="n">tocsr</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.create_token_index_map"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.create_token_index_map">[docs]</a>    <span class="k">def</span> <span class="nf">create_token_index_map</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenized_docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Given the tokenized documents, finds all unique tokens and forms an index map</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokenized_docs (list): A list of documents, each document is represented as a single long string</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (dictionary): Dictionary where keys are tokens, values are the index into a feature matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">df_count</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">tokenized_docs</span><span class="p">:</span>
+            <span class="n">unique_doc_tokens</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">unique_doc_tokens</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">tok</span> <span class="ow">in</span> <span class="n">df_count</span><span class="p">:</span>
+                    <span class="n">df_count</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">+=</span> <span class="mi">1</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">df_count</span><span class="p">[</span><span class="n">tok</span><span class="p">]</span> <span class="o">=</span> <span class="mi">1</span>
+
+        <span class="c1"># remove the words not in the document freq range</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_count</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+            <span class="k">if</span> <span class="n">df_count</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&lt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;token_min_df&#39;</span><span class="p">]</span> <span class="ow">or</span> <span class="n">df_count</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">&gt;</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span>
+                <span class="s1">&#39;token_max_df&#39;</span><span class="p">]:</span>
+                <span class="k">del</span> <span class="p">(</span><span class="n">df_count</span><span class="p">[</span><span class="n">key</span><span class="p">])</span>
+
+        <span class="c1"># flatten the list of list of tokenized docs</span>
+        <span class="n">flattened_tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">item</span> <span class="k">for</span> <span class="n">sublist</span> <span class="ow">in</span> <span class="n">tokenized_docs</span> <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">sublist</span><span class="p">]</span>
+
+        <span class="c1"># form a complete list of unique words and create mapping</span>
+        <span class="n">index_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_count</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span>
+        <span class="n">index_map</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">index_keys</span><span class="p">:</span>
+            <span class="n">index_map</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">index</span>
+            <span class="n">index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="k">return</span> <span class="n">index_map</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.tokenize_docs"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.tokenize_docs">[docs]</a>    <span class="k">def</span> <span class="nf">tokenize_docs</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Breaks each document down into a list of words(tokens).</span>
+
+<span class="sd">        Converts a list of documents(each document is given as a single string) and converts them to their tokenized</span>
+<span class="sd">        form in the following manner(some steps may be skipped if configured as such in the configuration settings)</span>
+<span class="sd">         - break document into tokens</span>
+<span class="sd">         - remove punctuation</span>
+<span class="sd">         - stem tokens</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            docs (list): A list of documents, each document is represented as a single long string</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (list): The tokenized documents as a list of lists, each item of the outer list is a document, which is represented as a list of words.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">d</span><span class="p">)</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+            <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+                <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">punct</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;puncts&#39;</span><span class="p">]:</span>
+                <span class="n">d</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">punct</span><span class="p">,</span> <span class="s1">&#39; &#39;</span><span class="p">)</span>
+            <span class="n">d</span> <span class="o">=</span> <span class="n">wordpunct_tokenize</span><span class="p">(</span><span class="n">d</span><span class="p">)</span>
+            <span class="n">tokens</span> <span class="o">=</span> <span class="p">[</span><span class="n">utils</span><span class="o">.</span><span class="n">to_unicode</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">token</span><span class="p">))</span> <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">d</span> <span class="k">if</span> <span class="n">token</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">stopwords</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">token</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">]</span>
+            <span class="n">tokenized_docs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">tokens</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="c1"># stem the docs if enabled</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;porter&#39;</span><span class="p">:</span>
+            <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">porter_stemmer</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;lancaster&#39;</span><span class="p">:</span>
+            <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">lancaster_stemmer</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;snowball&#39;</span><span class="p">:</span>
+            <span class="n">tokenized_docs</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">snowball_stemmer</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="s1">&#39;none&#39;</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">]</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">pass</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;unrecognized stemmer specified: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">preproc_config</span><span class="p">[</span><span class="s1">&#39;stemmer&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span> <span class="n">tokenized_docs</span></div>
+
+<div class="viewcode-block" id="HerdVectorizer.form_count_matrix"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.form_count_matrix">[docs]</a>    <span class="k">def</span> <span class="nf">form_count_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">tokenized_docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Forms the count matrix from the tokenized documents</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            tokenized_docs (list): A list of lists representing the tokenized documents. Each document is a list of tokens.</span>
+
+<span class="sd">        Return:</span>
+<span class="sd">            (sparse numpy matrix): A sparse count matrix in COO format.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">coo_doc_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">coo_token_index</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">coo_data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">doc_index</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">tokenized_docs</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">token</span> <span class="ow">in</span> <span class="n">doc</span><span class="p">:</span>
+                <span class="k">try</span><span class="p">:</span>
+                    <span class="n">token_index</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">tok_index_map</span><span class="p">[</span><span class="n">token</span><span class="p">]</span>
+                    <span class="n">coo_doc_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_index</span><span class="p">)</span>
+                    <span class="n">coo_token_index</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">token_index</span><span class="p">)</span>
+                    <span class="n">coo_data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+                <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                <span class="k">except</span> <span class="ne">TypeError</span><span class="p">:</span>
+                    <span class="k">continue</span>
+            <span class="n">doc_index</span> <span class="o">+=</span> <span class="mi">1</span>
+
+        <span class="n">token_coo_mat</span> <span class="o">=</span> <span class="n">scipy</span><span class="o">.</span><span class="n">sparse</span><span class="o">.</span><span class="n">coo_matrix</span><span class="p">((</span><span class="n">coo_data</span><span class="p">,</span> <span class="p">(</span><span class="n">coo_doc_index</span><span class="p">,</span> <span class="n">coo_token_index</span><span class="p">)),</span>
+                                                <span class="n">shape</span><span class="o">=</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">tokenized_docs</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">tok_index_map</span><span class="p">)),</span>
+                                                <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">float16</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">token_coo_mat</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HerdVectorizer.lancaster_stemmer"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.lancaster_stemmer">[docs]</a>    <span class="k">def</span> <span class="nf">lancaster_stemmer</span><span class="p">(</span><span class="n">docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Lancaster stemming algorithm&quot;&quot;&quot;</span>
+        <span class="n">stemmer</span> <span class="o">=</span> <span class="n">LancasterStemmer</span><span class="p">()</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">abstract</span><span class="p">]</span> <span class="k">for</span> <span class="n">abstract</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">docs</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HerdVectorizer.snowball_stemmer"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.snowball_stemmer">[docs]</a>    <span class="k">def</span> <span class="nf">snowball_stemmer</span><span class="p">(</span><span class="n">docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Snowball stemming algorithm&quot;&quot;&quot;</span>
+        <span class="n">stemmer</span> <span class="o">=</span> <span class="n">SnowballStemmer</span><span class="p">(</span><span class="s1">&#39;english&#39;</span><span class="p">)</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">abstract</span><span class="p">]</span> <span class="k">for</span> <span class="n">abstract</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">docs</span></div>
+
+    <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="HerdVectorizer.porter_stemmer"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.HerdVectorizer.porter_stemmer">[docs]</a>    <span class="k">def</span> <span class="nf">porter_stemmer</span><span class="p">(</span><span class="n">docs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;Porter stemming algorithm&quot;&quot;&quot;</span>
+        <span class="n">stemmer</span> <span class="o">=</span> <span class="n">PorterStemmer</span><span class="p">()</span>
+        <span class="n">docs</span> <span class="o">=</span> <span class="p">[[</span><span class="n">stemmer</span><span class="o">.</span><span class="n">stem</span><span class="p">(</span><span class="n">word</span><span class="p">)</span> <span class="k">for</span> <span class="n">word</span> <span class="ow">in</span> <span class="n">abstract</span><span class="p">]</span> <span class="k">for</span> <span class="n">abstract</span> <span class="ow">in</span> <span class="n">docs</span><span class="p">]</span>
+        <span class="k">return</span> <span class="n">docs</span></div></div>
+
+
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.HerdVectorizer.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">herd</span> <span class="o">=</span> <span class="n">HerdVectorizer</span><span class="p">()</span>
+
+    <span class="n">filename</span> <span class="o">=</span> <span class="s1">&#39;/users/j817s517/PycharmProjects/HERD/Eager_HERDAttribs_wDataElements_032616.xlsx&#39;</span>
+    <span class="c1"># filename = &#39;/users/j817s517/PycharmProjects/HERD/test.xlsx&#39;</span>
+    <span class="n">dataframe</span> <span class="o">=</span> <span class="n">pandas</span><span class="o">.</span><span class="n">read_excel</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">abstracts</span> <span class="o">=</span> <span class="n">dataframe</span><span class="p">[</span><span class="s1">&#39;SOW&#39;</span><span class="p">]</span>
+
+    <span class="n">herd</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+    <span class="n">herd</span><span class="o">.</span><span class="n">save_configuration</span><span class="p">(</span><span class="s1">&#39;test.hdf5&#39;</span><span class="p">)</span>
+
+    <span class="n">tfidf1</span> <span class="o">=</span> <span class="n">herd</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+
+    <span class="n">herd2</span> <span class="o">=</span> <span class="n">HerdVectorizer</span><span class="p">()</span>
+    <span class="n">herd2</span><span class="o">.</span><span class="n">load_configuration</span><span class="p">(</span><span class="s1">&#39;test.hdf5&#39;</span><span class="p">)</span>
+    <span class="n">tfidf2</span> <span class="o">=</span> <span class="n">herd2</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Joseph St.Amand.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>

@@ -1,0 +1,22 @@
+\select@language {english}
+\contentsline {chapter}{\numberline {1}KUHERD package}{1}{chapter.1}
+\contentsline {section}{\numberline {1.1}Subpackages}{1}{section.1.1}
+\contentsline {subsection}{\numberline {1.1.1}KUHERD.Experiments package}{1}{subsection.1.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1.1}Submodules}{1}{subsubsection.1.1.1.1}
+\contentsline {subsubsection}{\numberline {1.1.1.2}KUHERD.Experiments.MultiDT module}{1}{subsubsection.1.1.1.2}
+\contentsline {subsubsection}{\numberline {1.1.1.3}KUHERD.Experiments.MultiLR module}{1}{subsubsection.1.1.1.3}
+\contentsline {subsubsection}{\numberline {1.1.1.4}KUHERD.Experiments.MultiNB module}{1}{subsubsection.1.1.1.4}
+\contentsline {subsubsection}{\numberline {1.1.1.5}KUHERD.Experiments.MultiRF module}{1}{subsubsection.1.1.1.5}
+\contentsline {subsubsection}{\numberline {1.1.1.6}KUHERD.Experiments.MultiSVM module}{2}{subsubsection.1.1.1.6}
+\contentsline {subsubsection}{\numberline {1.1.1.7}Module contents}{2}{subsubsection.1.1.1.7}
+\contentsline {section}{\numberline {1.2}Submodules}{2}{section.1.2}
+\contentsline {section}{\numberline {1.3}KUHERD.FeatureSelector module}{2}{section.1.3}
+\contentsline {section}{\numberline {1.4}KUHERD.HerdVectorizer module}{2}{section.1.4}
+\contentsline {section}{\numberline {1.5}KUHERD.LabelSets module}{5}{section.1.5}
+\contentsline {section}{\numberline {1.6}KUHERD.LabelTransformations module}{5}{section.1.6}
+\contentsline {section}{\numberline {1.7}KUHERD.Models module}{5}{section.1.7}
+\contentsline {section}{\numberline {1.8}KUHERD.MultiFeatureSelector module}{7}{section.1.8}
+\contentsline {section}{\numberline {1.9}Module contents}{7}{section.1.9}
+\contentsline {chapter}{\numberline {2}Indices and tables}{9}{chapter.2}
+\contentsline {chapter}{Python Module Index}{11}{section*.47}
+\contentsline {chapter}{Index}{13}{section*.48}
