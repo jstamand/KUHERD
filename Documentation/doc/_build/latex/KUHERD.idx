@@ -1,0 +1,60 @@
+\indexentry{KUHERD.Experiments.MultiDT (module)|hyperpage}{1}
+\indexentry{MultiDT() (in module KUHERD.Experiments.MultiDT)|hyperpage}{1}
+\indexentry{KUHERD.Experiments.MultiLR (module)|hyperpage}{1}
+\indexentry{MultiLR() (in module KUHERD.Experiments.MultiLR)|hyperpage}{1}
+\indexentry{KUHERD.Experiments.MultiNB (module)|hyperpage}{1}
+\indexentry{MultiNB() (in module KUHERD.Experiments.MultiNB)|hyperpage}{1}
+\indexentry{KUHERD.Experiments.MultiRF (module)|hyperpage}{1}
+\indexentry{MultiRF() (in module KUHERD.Experiments.MultiRF)|hyperpage}{1}
+\indexentry{KUHERD.Experiments.MultiSVM (module)|hyperpage}{2}
+\indexentry{MultiSVM() (in module KUHERD.Experiments.MultiSVM)|hyperpage}{2}
+\indexentry{KUHERD.Experiments (module)|hyperpage}{2}
+\indexentry{KUHERD.Tools.trainModel (module)|hyperpage}{2}
+\indexentry{main() (in module KUHERD.Tools.trainModel)|hyperpage}{2}
+\indexentry{KUHERD.Tools (module)|hyperpage}{2}
+\indexentry{KUHERD.FeatureSelector (module)|hyperpage}{2}
+\indexentry{FeatureSelector (class in KUHERD.FeatureSelector)|hyperpage}{2}
+\indexentry{fit() (KUHERD.FeatureSelector.FeatureSelector method)|hyperpage}{2}
+\indexentry{transform() (KUHERD.FeatureSelector.FeatureSelector method)|hyperpage}{2}
+\indexentry{KUHERD.HerdVectorizer (module)|hyperpage}{2}
+\indexentry{HerdVectorizer (class in KUHERD.HerdVectorizer)|hyperpage}{2}
+\indexentry{create\_bigram\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{2}
+\indexentry{create\_token\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{filter\_docs() (KUHERD.HerdVectorizer.HerdVectorizer static method)|hyperpage}{3}
+\indexentry{form\_bigram\_count\_matrix() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{form\_count\_matrix() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{getConfig() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{get\_bigram\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{get\_preproc\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{lancaster\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer static method)|hyperpage}{3}
+\indexentry{porter\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer static method)|hyperpage}{3}
+\indexentry{set\_bigram\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{set\_bigrams() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{set\_feature\_selector() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{set\_preproc\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{set\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
+\indexentry{snowball\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer static method)|hyperpage}{4}
+\indexentry{tokenize\_docs() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
+\indexentry{train() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
+\indexentry{transform\_data() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
+\indexentry{main() (in module KUHERD.HerdVectorizer)|hyperpage}{4}
+\indexentry{KUHERD.LabelSets (module)|hyperpage}{4}
+\indexentry{KUHERD.LabelTransformations (module)|hyperpage}{4}
+\indexentry{label2mat() (in module KUHERD.LabelTransformations)|hyperpage}{4}
+\indexentry{mat2vec() (in module KUHERD.LabelTransformations)|hyperpage}{5}
+\indexentry{vec2mat() (in module KUHERD.LabelTransformations)|hyperpage}{5}
+\indexentry{vec2string() (in module KUHERD.LabelTransformations)|hyperpage}{5}
+\indexentry{KUHERD.Models (module)|hyperpage}{5}
+\indexentry{ClassificationModel (class in KUHERD.Models)|hyperpage}{5}
+\indexentry{fit() (KUHERD.Models.ClassificationModel method)|hyperpage}{5}
+\indexentry{get\_config() (KUHERD.Models.ClassificationModel method)|hyperpage}{5}
+\indexentry{predict() (KUHERD.Models.ClassificationModel method)|hyperpage}{5}
+\indexentry{PurposeFieldModel (class in KUHERD.Models)|hyperpage}{5}
+\indexentry{fit() (KUHERD.Models.PurposeFieldModel method)|hyperpage}{5}
+\indexentry{get\_config() (KUHERD.Models.PurposeFieldModel method)|hyperpage}{5}
+\indexentry{predict() (KUHERD.Models.PurposeFieldModel method)|hyperpage}{6}
+\indexentry{KUHERD.MultiFeatureSelector (module)|hyperpage}{6}
+\indexentry{MultiFeatureSelector (class in KUHERD.MultiFeatureSelector)|hyperpage}{6}
+\indexentry{fit() (KUHERD.MultiFeatureSelector.MultiFeatureSelector method)|hyperpage}{6}
+\indexentry{transform() (KUHERD.MultiFeatureSelector.MultiFeatureSelector method)|hyperpage}{6}
+\indexentry{KUHERD (module)|hyperpage}{6}

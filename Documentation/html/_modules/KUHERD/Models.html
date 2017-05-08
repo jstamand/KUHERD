@@ -1,0 +1,268 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>KUHERD.Models &#8212; KUHERD 1.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '1.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true,
+        SOURCELINK_SUFFIX: '.txt'
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+   
+  <link rel="stylesheet" href="../../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for KUHERD.Models</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">.. moduleauthor:: Joseph St.Amand &lt;josephstamand@gmail.com&gt;</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
+<span class="kn">import</span> <span class="nn">nltk</span>
+<span class="kn">from</span> <span class="nn">nltk</span> <span class="k">import</span> <span class="n">BigramAssocMeasures</span><span class="p">,</span> <span class="n">TrigramAssocMeasures</span>
+<span class="kn">from</span> <span class="nn">nltk.collocations</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">nltk.stem</span> <span class="k">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">nltk.tokenize</span> <span class="k">import</span> <span class="n">wordpunct_tokenize</span>
+<span class="kn">import</span> <span class="nn">numpy</span>
+<span class="kn">import</span> <span class="nn">scipy</span>
+<span class="kn">from</span> <span class="nn">sklearn.feature_extraction.text</span> <span class="k">import</span> <span class="n">TfidfTransformer</span>
+<span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">KUHERD.HerdVectorizer</span> <span class="k">import</span> <span class="n">HerdVectorizer</span>
+<span class="kn">from</span> <span class="nn">KUHERD.LabelTransformations</span> <span class="k">import</span> <span class="n">mat2vec</span>
+<span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
+<span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="k">import</span> <span class="n">SVC</span>
+<span class="kn">from</span> <span class="nn">sklearn</span> <span class="k">import</span> <span class="n">naive_bayes</span>
+<span class="kn">from</span> <span class="nn">sklearn.ensemble</span> <span class="k">import</span> <span class="n">RandomForestClassifier</span>
+
+
+<div class="viewcode-block" id="ClassificationModel"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.ClassificationModel">[docs]</a><span class="k">class</span> <span class="nc">ClassificationModel</span><span class="p">:</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;This class is a wrapper for a model which targets either the Purpose or Field category set.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">target_set</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;target_set&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model_config&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># sort out which model the configuration contains</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;LogisticRegression&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">LogisticRegression</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;DecisionTree&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">DecisionTreeClassifier</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;SVC&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">SVC</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;Naivebayes&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">naive_bayes</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;RandomForest&#39;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">RandomForestClassifier</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Invalid config, model given is unknown: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">set_params</span><span class="p">(</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">model_config</span><span class="p">)</span>
+
+        <span class="k">return</span>
+
+
+<div class="viewcode-block" id="ClassificationModel.fit"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.ClassificationModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trains the model.</span>
+
+<span class="sd">        Fitting or &quot;training&quot; must be done before the model is able to make predictions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (numpy matrix): Training samples.</span>
+<span class="sd">            Y (numpy matrix): Training labels.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            None: No return value.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">)</span>
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="ClassificationModel.predict"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.ClassificationModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">X</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Make predictions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            X (numpy matrix): Training samples.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            numpy matrix: predicted label values.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">Y</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Y</span></div>
+
+<div class="viewcode-block" id="ClassificationModel.get_config"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.ClassificationModel.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the configuration used to build this model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: dictionary containing target label set, internal model configuration, and model name.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;target_set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_set</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
+
+
+
+<div class="viewcode-block" id="PurposeFieldModel"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.PurposeFieldModel">[docs]</a><span class="k">class</span> <span class="nc">PurposeFieldModel</span><span class="p">:</span>
+
+
+    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Combines the purpose and field vectorizers and prediction models into a single &quot;composite&quot; model.</span>
+
+<span class="sd">        Takes configurations for building the vectorizers and classification models. The &#39;purpose&#39; and &#39;field&#39; categories each get their own</span>
+<span class="sd">        vectorizer and model. The vectorizer configs can be retrieved from HerdVectorizer class, the model configs may be retrieved from the</span>
+<span class="sd">        ClassificationModel class.</span>
+<span class="sd">    </span>
+<span class="sd">        Args:</span>
+<span class="sd">            config (dictionary): Dictionary containing the following configuration: &#39;purpose_vectorizer&#39;, &#39;field_vectorizer&#39;, &#39;purpose_model&#39;, &#39;field_model&#39;.</span>
+<span class="sd">    </span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">purpose_vectorizer</span> <span class="o">=</span> <span class="n">HerdVectorizer</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;purpose_vectorizer&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_vectorizer</span> <span class="o">=</span> <span class="n">HerdVectorizer</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;field_vectorizer&#39;</span><span class="p">])</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">purpose_model</span> <span class="o">=</span> <span class="n">ClassificationModel</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;purpose_model&#39;</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_model</span> <span class="o">=</span> <span class="n">ClassificationModel</span><span class="p">(</span><span class="n">config</span><span class="p">[</span><span class="s1">&#39;field_model&#39;</span><span class="p">])</span>
+
+        <span class="k">return</span>
+
+<div class="viewcode-block" id="PurposeFieldModel.fit"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.PurposeFieldModel.fit">[docs]</a>    <span class="k">def</span> <span class="nf">fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abstracts</span><span class="p">,</span> <span class="n">Y_purpose</span><span class="p">,</span> <span class="n">Y_field</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Trains the model.</span>
+
+<span class="sd">        Input arguments must all be the same length.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            abstracts (list): A list of documents, each document is represented as a list of words.</span>
+<span class="sd">            Y_purpose (list): A list of labels of the &#39;purpose&#39; variety.</span>
+<span class="sd">            Y_field (list): A list of labels of the &#39;field&#39; variety.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">purpose_vectorizer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">abstracts</span><span class="p">,</span> <span class="n">Y_purpose</span><span class="p">,</span> <span class="s1">&#39;purpose&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_vectorizer</span><span class="o">.</span><span class="n">train</span><span class="p">(</span><span class="n">abstracts</span><span class="p">,</span> <span class="n">Y_field</span><span class="p">,</span> <span class="s1">&#39;field&#39;</span><span class="p">)</span>
+
+        <span class="n">X_purpose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_vectorizer</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+        <span class="n">X_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_vectorizer</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+
+        <span class="n">Y_purpose</span> <span class="o">=</span> <span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_purpose</span><span class="p">)</span>
+        <span class="n">Y_field</span> <span class="o">=</span> <span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_field</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">purpose_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_purpose</span><span class="p">,</span> <span class="n">Y_purpose</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">field_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_field</span><span class="p">,</span> <span class="n">Y_field</span><span class="p">)</span>
+
+        <span class="k">return</span></div>
+
+<div class="viewcode-block" id="PurposeFieldModel.predict"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.PurposeFieldModel.predict">[docs]</a>    <span class="k">def</span> <span class="nf">predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">abstracts</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Make predictions on the input data.</span>
+
+<span class="sd">        The list of documents input is vectorized and input to the prediction model, which generates label predictions.</span>
+<span class="sd">        This process is done separately for generating both purpose and field label predictions.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            abstracts (list): A list of documents, each document is represented as a list of words.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dictionary: dictionary containing two lists of predictions, dictionary keys are &#39;purpose&#39; and &#39;field&#39;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">X_purpose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_vectorizer</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+        <span class="n">X_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_vectorizer</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
+
+        <span class="n">predictions</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">predictions</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_purpose</span><span class="p">)</span>
+        <span class="n">predictions</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_field</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">predictions</span></div>
+
+<div class="viewcode-block" id="PurposeFieldModel.get_config"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.PurposeFieldModel.get_config">[docs]</a>    <span class="k">def</span> <span class="nf">get_config</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the configuration used to build this model.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: dictionary containing the following keys, &#39;purpose_vectorizer&#39;, &#39;field_vectorizer&#39;, &#39;purpose_model&#39;, &#39;field_model&#39;. Each entry is the configuration required to build the model.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">config</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">()</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;purpose_vectorizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_vectorizer</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;field_vectorizer&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_vectorizer</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;purpose_model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_model</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;field_model&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_model</span><span class="o">.</span><span class="n">get_config</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">config</span></div></div>
+
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <div><input type="text" name="q" /></div>
+      <div><input type="submit" value="Go" /></div>
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2017, Joseph St.Amand.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.5.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
