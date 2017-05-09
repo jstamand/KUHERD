@@ -9,6 +9,8 @@
 \indexentry{KUHERD.Experiments.MultiSVM (module)|hyperpage}{2}
 \indexentry{MultiSVM() (in module KUHERD.Experiments.MultiSVM)|hyperpage}{2}
 \indexentry{KUHERD.Experiments (module)|hyperpage}{2}
+\indexentry{KUHERD.Tools.makePredictions (module)|hyperpage}{2}
+\indexentry{main() (in module KUHERD.Tools.makePredictions)|hyperpage}{2}
 \indexentry{KUHERD.Tools.trainModel (module)|hyperpage}{2}
 \indexentry{main() (in module KUHERD.Tools.trainModel)|hyperpage}{2}
 \indexentry{KUHERD.Tools (module)|hyperpage}{2}
@@ -18,7 +20,7 @@
 \indexentry{transform() (KUHERD.FeatureSelector.FeatureSelector method)|hyperpage}{2}
 \indexentry{KUHERD.HerdVectorizer (module)|hyperpage}{2}
 \indexentry{HerdVectorizer (class in KUHERD.HerdVectorizer)|hyperpage}{2}
-\indexentry{create\_bigram\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{2}
+\indexentry{create\_bigram\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
 \indexentry{create\_token\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
 \indexentry{filter\_docs() (KUHERD.HerdVectorizer.HerdVectorizer static method)|hyperpage}{3}
 \indexentry{form\_bigram\_count\_matrix() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
@@ -31,7 +33,7 @@
 \indexentry{set\_bigram\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
 \indexentry{set\_bigrams() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
 \indexentry{set\_feature\_selector() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
-\indexentry{set\_preproc\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{3}
+\indexentry{set\_preproc\_config() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
 \indexentry{set\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
 \indexentry{snowball\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer static method)|hyperpage}{4}
 \indexentry{tokenize\_docs() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}

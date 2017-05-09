@@ -3,7 +3,7 @@
 
   \bigletter C
   \item ClassificationModel (class in KUHERD.Models), \hyperpage{5}
-  \item create\_bigram\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{2}
+  \item create\_bigram\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{3}
   \item create\_token\_index\_map() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{3}
 
   \indexspace
@@ -45,6 +45,7 @@
   \item KUHERD.Models (module), \hyperpage{5}
   \item KUHERD.MultiFeatureSelector (module), \hyperpage{6}
   \item KUHERD.Tools (module), \hyperpage{2}
+  \item KUHERD.Tools.makePredictions (module), \hyperpage{2}
   \item KUHERD.Tools.trainModel (module), \hyperpage{2}
 
   \indexspace
@@ -55,6 +56,7 @@
   \indexspace
   \bigletter M
   \item main() (in module KUHERD.HerdVectorizer), \hyperpage{4}
+  \item main() (in module KUHERD.Tools.makePredictions), \hyperpage{2}
   \item main() (in module KUHERD.Tools.trainModel), \hyperpage{2}
   \item mat2vec() (in module KUHERD.LabelTransformations), \hyperpage{5}
   \item MultiDT() (in module KUHERD.Experiments.MultiDT), \hyperpage{1}
@@ -76,7 +78,7 @@
   \item set\_bigram\_config() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{3}
   \item set\_bigrams() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{3}
   \item set\_feature\_selector() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{3}
-  \item set\_preproc\_config() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{3}
+  \item set\_preproc\_config() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{4}
   \item set\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer method), \hyperpage{4}
   \item snowball\_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer static method), \hyperpage{4}
 
