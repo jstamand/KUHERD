@@ -1,22 +1,11 @@
-import argparse
-from Herd_v2.HerdVectorizer import HerdVectorizer
+import sys
 import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..",".."))
+import argparse
 import pandas as pd
 import pickle
-import sys
-import xlsxwriter
 
-import collections
-
-
-
-from Herd_v2.Util.vec2mat import vec2mat
-from Herd_v2.Util.vec2mat import label2mat
-from Herd_v2.Util.vec2mat import vec2string
-from Herd_v2.Util.mat2vec import mat2vec
-from sklearn.linear_model import LogisticRegression
-
-from Herd_v2 import LabelSets
+from KUHERD.LabelTransformations import vec2string
 
 def main():
 
