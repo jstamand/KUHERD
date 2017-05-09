@@ -1,13 +1,14 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..",".."))
+
 import argparse
 import numpy as np
-import os
 import pandas
-
+import yaml
 from sklearn.model_selection import GridSearchCV
 from sklearn.tree import DecisionTreeClassifier
 import sklearn.metrics as skmetrics
-
-import yaml
 
 from KUHERD import LabelSets
 from KUHERD.HerdVectorizer import HerdVectorizer

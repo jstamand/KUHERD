@@ -1,6 +1,9 @@
+import sys
+import os
+sys.path.append(os.path.join(os.path.dirname(__file__), "..",".."))
+
 import argparse
 import numpy as np
-import os
 import pandas
 from sklearn.model_selection import GridSearchCV
 from sklearn.naive_bayes import GaussianNB
