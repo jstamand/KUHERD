@@ -1,36 +1,16 @@
-#    Copyright (C) 2017  Joseph St.Amand
-
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU General Public License as published by
-#    the Free Software Foundation, either version 3 of the License, or
-#    (at your option) any later version.
-
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU General Public License for more details.
-
-#    You should have received a copy of the GNU General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-import sys
-import os
-sys.path.append(os.path.join(os.path.dirname(__file__), "..",".."))
-
 import argparse
+import os
+
 import numpy as np
 import pandas
-from sklearn.model_selection import GridSearchCV
-from sklearn.preprocessing import MultiLabelBinarizer
-from sklearn.tree import DecisionTreeClassifier
-from sklearn.linear_model import LogisticRegression
 import sklearn.metrics as skmetrics
-from sklearn import preprocessing
-from KUHERD import LabelSets
 import yaml
+from sklearn.linear_model import LogisticRegression
+from sklearn.model_selection import GridSearchCV
 
+from KUHERD import LabelTransformer
 from KUHERD.HerdVectorizer import HerdVectorizer
-from KUHERD.LabelTransformations import vec2mat, label2mat, mat2vec
+
 
 def MultiLR():
     """ Program for running an experiment using Loigistic Regression classifier."""
@@ -44,7 +24,7 @@ def MultiLR():
     clf_parser.add_argument('-g', action='store_true')
     clf_parser.add_argument('-d', dest='dataset', type=str, help='dataset(xlsx or hdf5)')
 
-    clf_parser.add_argument('--target_set', dest='target_set', type=str, default='purpose', help='target set for prediction, {purpose, field, both}')
+    clf_parser.add_argument('--target_set', dest='target_set', type=str, default='purpose', help='target set for prediction, {purpose, field, custom}')
     clf_parser.add_argument('--stemmer', dest='stemmer', type=str, default=None)
     clf_parser.add_argument('--tok_min_df', dest='token_min_df', type=int, default=10, help='Min. doc. freq. of tokens')
     clf_parser.add_argument('--tok_max_df', dest='token_max_df', type=int, default=200, help='Max. doc. freq. of tokens')
@@ -76,11 +56,11 @@ def MultiLR():
     # retrieve the label set
     label_set = []
     if clf_args.target_set == 'purpose':
-        label_set = LabelSets.purpose
+        label_set = LabelTransformer(LabelTransformer.default_labels('purpose'))
     elif clf_args.target_set == 'field':
-        label_set = LabelSets.field
-    elif clf_args.target_set == 'both':
-        label_set = LabelSets.purpose + LabelSets.field
+        label_set = LabelTransformer(LabelTransformer.default_labels('field'))
+    elif clf_args.target_set == 'custom':
+        raise ValueError('TODO: implement custom label set here!')
     else:
         print('target_set invalid!')
         exit()
@@ -92,8 +72,8 @@ def MultiLR():
     Y_train = list(df_train[clf_args.target_set])
     Y_test = list(df_test[clf_args.target_set])
 
-    Y_train = label2mat(Y_train, clf_args.target_set)
-    Y_test = label2mat(Y_test, clf_args.target_set)
+    Y_train = label_set.label2mat(Y_train)
+    Y_test = label_set.label2mat(Y_test)
 
     # prepare the vectorizer and vectorize the data
     myVec = HerdVectorizer()
@@ -135,7 +115,7 @@ def MultiLR():
          'max_iter': [300], 'multi_class': ['multinomial'], 'solver': ['newton-cg']}
     ]
 
-    y_train = mat2vec(Y_train)
+    y_train = label_set.mat2vec(Y_train)
 
     test_model = LogisticRegression()
     test_model.fit(X_train_validate, y_train)
@@ -169,8 +149,8 @@ def MultiLR():
         y_predict = best_dt_model.predict(X_train_validate[test_ind])
         y_test = y_train[test_ind]
 
-        y_multi_test = vec2mat(y_test, clf_args.target_set)
-        y_multi_predict = vec2mat(y_predict, clf_args.target_set)
+        y_multi_test = label_set.vec2mat(y_test)
+        y_multi_predict = label_set.vec2mat(y_predict)
 
         for i, label in enumerate(label_set):
             metrics[label]['accuracy'].append(skmetrics.accuracy_score(y_multi_test[:, i], y_multi_predict[:, i]))
