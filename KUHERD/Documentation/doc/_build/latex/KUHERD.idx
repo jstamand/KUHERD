@@ -40,12 +40,13 @@
 \indexentry{train() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
 \indexentry{transform\_data() (KUHERD.HerdVectorizer.HerdVectorizer method)|hyperpage}{4}
 \indexentry{main() (in module KUHERD.HerdVectorizer)|hyperpage}{4}
-\indexentry{KUHERD.LabelSets (module)|hyperpage}{4}
-\indexentry{KUHERD.LabelTransformations (module)|hyperpage}{4}
-\indexentry{label2mat() (in module KUHERD.LabelTransformations)|hyperpage}{4}
-\indexentry{mat2vec() (in module KUHERD.LabelTransformations)|hyperpage}{5}
-\indexentry{vec2mat() (in module KUHERD.LabelTransformations)|hyperpage}{5}
-\indexentry{vec2string() (in module KUHERD.LabelTransformations)|hyperpage}{5}
+\indexentry{KUHERD.LabelTransformer (module)|hyperpage}{4}
+\indexentry{LabelTransformer (class in KUHERD.LabelTransformer)|hyperpage}{4}
+\indexentry{default\_labels() (KUHERD.LabelTransformer.LabelTransformer method)|hyperpage}{4}
+\indexentry{label2mat() (KUHERD.LabelTransformer.LabelTransformer method)|hyperpage}{4}
+\indexentry{mat2vec() (KUHERD.LabelTransformer.LabelTransformer method)|hyperpage}{5}
+\indexentry{vec2mat() (KUHERD.LabelTransformer.LabelTransformer method)|hyperpage}{5}
+\indexentry{vec2string() (KUHERD.LabelTransformer.LabelTransformer method)|hyperpage}{5}
 \indexentry{KUHERD.Models (module)|hyperpage}{5}
 \indexentry{ClassificationModel (class in KUHERD.Models)|hyperpage}{5}
 \indexentry{fit() (KUHERD.Models.ClassificationModel method)|hyperpage}{5}

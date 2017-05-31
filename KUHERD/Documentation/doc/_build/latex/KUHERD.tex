@@ -42,7 +42,7 @@
 
 
 \title{KUHERD Documentation}
-\date{May 09, 2017}
+\date{May 31, 2017}
 \release{1.0}
 \author{Joseph St.Amand}
 \newcommand{\sphinxlogo}{}
@@ -58,13 +58,13 @@
 
 
 \chapter{KUHERD package}
-\label{\detokenize{KUHERD::doc}}\label{\detokenize{KUHERD:welcome-to-kuherd-s-documentation}}\label{\detokenize{KUHERD:kuherd-package}}
+\label{\detokenize{KUHERD:kuherd-package}}\label{\detokenize{KUHERD:welcome-to-kuherd-s-documentation}}\label{\detokenize{KUHERD::doc}}
 
 \section{Subpackages}
 \label{\detokenize{KUHERD:subpackages}}
 
 \subsection{KUHERD.Experiments package}
-\label{\detokenize{KUHERD.Experiments::doc}}\label{\detokenize{KUHERD.Experiments:kuherd-experiments-package}}
+\label{\detokenize{KUHERD.Experiments:kuherd-experiments-package}}\label{\detokenize{KUHERD.Experiments::doc}}
 
 \subsubsection{Submodules}
 \label{\detokenize{KUHERD.Experiments:submodules}}
@@ -92,7 +92,7 @@ Program for running an experiment using Loigistic Regression classifier.
 
 
 \subsubsection{KUHERD.Experiments.MultiNB module}
-\label{\detokenize{KUHERD.Experiments:module-KUHERD.Experiments.MultiNB}}\label{\detokenize{KUHERD.Experiments:kuherd-experiments-multinb-module}}\index{KUHERD.Experiments.MultiNB (module)}\index{MultiNB() (in module KUHERD.Experiments.MultiNB)}
+\label{\detokenize{KUHERD.Experiments:kuherd-experiments-multinb-module}}\label{\detokenize{KUHERD.Experiments:module-KUHERD.Experiments.MultiNB}}\index{KUHERD.Experiments.MultiNB (module)}\index{MultiNB() (in module KUHERD.Experiments.MultiNB)}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{KUHERD.Experiments:KUHERD.Experiments.MultiNB.MultiNB}}\pysiglinewithargsret{\sphinxcode{KUHERD.Experiments.MultiNB.}\sphinxbfcode{MultiNB}}{}{}
@@ -125,7 +125,7 @@ Program for running an experiment using Support Vector Machine classifier.
 
 
 \subsubsection{Module contents}
-\label{\detokenize{KUHERD.Experiments:module-contents}}\label{\detokenize{KUHERD.Experiments:module-KUHERD.Experiments}}\index{KUHERD.Experiments (module)}
+\label{\detokenize{KUHERD.Experiments:module-KUHERD.Experiments}}\label{\detokenize{KUHERD.Experiments:module-contents}}\index{KUHERD.Experiments (module)}
 
 \subsection{KUHERD.Tools package}
 \label{\detokenize{KUHERD.Tools:kuherd-tools-package}}\label{\detokenize{KUHERD.Tools::doc}}
@@ -152,7 +152,7 @@ Program for running an experiment using Support Vector Machine classifier.
 
 
 \subsubsection{Module contents}
-\label{\detokenize{KUHERD.Tools:module-KUHERD.Tools}}\label{\detokenize{KUHERD.Tools:module-contents}}\index{KUHERD.Tools (module)}
+\label{\detokenize{KUHERD.Tools:module-contents}}\label{\detokenize{KUHERD.Tools:module-KUHERD.Tools}}\index{KUHERD.Tools (module)}
 
 \section{Submodules}
 \label{\detokenize{KUHERD:submodules}}
@@ -204,7 +204,7 @@ y (integer list): The labels for the data.
 
 
 \section{KUHERD.HerdVectorizer module}
-\label{\detokenize{KUHERD:kuherd-herdvectorizer-module}}\label{\detokenize{KUHERD:module-KUHERD.HerdVectorizer}}\index{KUHERD.HerdVectorizer (module)}\index{HerdVectorizer (class in KUHERD.HerdVectorizer)}
+\label{\detokenize{KUHERD:module-KUHERD.HerdVectorizer}}\label{\detokenize{KUHERD:kuherd-herdvectorizer-module}}\index{KUHERD.HerdVectorizer (module)}\index{HerdVectorizer (class in KUHERD.HerdVectorizer)}
 
 \begin{fulllineitems}
 \phantomsection\label{\detokenize{KUHERD:KUHERD.HerdVectorizer.HerdVectorizer}}\pysiglinewithargsret{\sphinxstrong{class }\sphinxcode{KUHERD.HerdVectorizer.}\sphinxbfcode{HerdVectorizer}}{\emph{config}}{}
@@ -469,19 +469,26 @@ docs (list): A list of documents, each document is represented as a string.
 
 
 
-\section{KUHERD.LabelSets module}
-\label{\detokenize{KUHERD:module-KUHERD.LabelSets}}\label{\detokenize{KUHERD:kuherd-labelsets-module}}\index{KUHERD.LabelSets (module)}
-
-\section{KUHERD.LabelTransformations module}
-\label{\detokenize{KUHERD:module-KUHERD.LabelTransformations}}\label{\detokenize{KUHERD:kuherd-labeltransformations-module}}\index{KUHERD.LabelTransformations (module)}\index{label2mat() (in module KUHERD.LabelTransformations)}
+\section{KUHERD.LabelTransformer module}
+\label{\detokenize{KUHERD:module-KUHERD.LabelTransformer}}\label{\detokenize{KUHERD:kuherd-labeltransformer-module}}\index{KUHERD.LabelTransformer (module)}\index{LabelTransformer (class in KUHERD.LabelTransformer)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformations.label2mat}}\pysiglinewithargsret{\sphinxcode{KUHERD.LabelTransformations.}\sphinxbfcode{label2mat}}{\emph{x}, \emph{label\_type}}{}
-Converts a vector of integers to a matrix of of zero-one valued columns.
+\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformer.LabelTransformer}}\pysiglinewithargsret{\sphinxstrong{class }\sphinxcode{KUHERD.LabelTransformer.}\sphinxbfcode{LabelTransformer}}{\emph{label\_set\_name}, \emph{labels}}{}
+Bases: \sphinxcode{object}
+\index{default\_labels() (KUHERD.LabelTransformer.LabelTransformer method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformer.LabelTransformer.default_labels}}\pysiglinewithargsret{\sphinxbfcode{default\_labels}}{\emph{target\_set}}{}
+\end{fulllineitems}
+
+\index{label2mat() (KUHERD.LabelTransformer.LabelTransformer method)}
+
+\begin{fulllineitems}
+\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformer.LabelTransformer.label2mat}}\pysiglinewithargsret{\sphinxbfcode{label2mat}}{\emph{x}}{}
+Converts a vector of strings to a matrix of of zero-one valued columns.
 \begin{description}
 \item[{Args:}] \leavevmode
-label\_vec (list): A vector containing integer values mapping to members of the label\_type.
-label\_type (str): Specifies label\_type of label\_vec, either `purpose' and `field'.
+x (list): A vector containing string values representing the labels.
 
 \item[{Return:}] \leavevmode
 (numpy matrix): A matrix of zero-one valued columns.
@@ -490,10 +497,10 @@ label\_type (str): Specifies label\_type of label\_vec, either `purpose' and `fi
 
 \end{fulllineitems}
 
-\index{mat2vec() (in module KUHERD.LabelTransformations)}
+\index{mat2vec() (KUHERD.LabelTransformer.LabelTransformer method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformations.mat2vec}}\pysiglinewithargsret{\sphinxcode{KUHERD.LabelTransformations.}\sphinxbfcode{mat2vec}}{\emph{M}}{}
+\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformer.LabelTransformer.mat2vec}}\pysiglinewithargsret{\sphinxbfcode{mat2vec}}{\emph{M}}{}
 Converts a zero-one valued label matrix to an integer valued label vector.
 \begin{description}
 \item[{Args:}] \leavevmode
@@ -503,15 +510,14 @@ M (numpy mat): A zero-one valued label matrix.
 
 \end{fulllineitems}
 
-\index{vec2mat() (in module KUHERD.LabelTransformations)}
+\index{vec2mat() (KUHERD.LabelTransformer.LabelTransformer method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformations.vec2mat}}\pysiglinewithargsret{\sphinxcode{KUHERD.LabelTransformations.}\sphinxbfcode{vec2mat}}{\emph{x}, \emph{label\_type}}{}
+\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformer.LabelTransformer.vec2mat}}\pysiglinewithargsret{\sphinxbfcode{vec2mat}}{\emph{x}}{}
 Converts a vector of integers to a matrix of of zero-one valued columns.
 \begin{description}
 \item[{Args:}] \leavevmode
 x (list): A vector containing integer values mapping to members of the label\_type.
-label\_type (str): Specifies label\_type of label\_vec, either `purpose' and `field'.
 
 \item[{Return:}] \leavevmode
 (numpy matrix): A matrix of zero-one valued columns.
@@ -520,20 +526,24 @@ label\_type (str): Specifies label\_type of label\_vec, either `purpose' and `fi
 
 \end{fulllineitems}
 
-\index{vec2string() (in module KUHERD.LabelTransformations)}
+\index{vec2string() (KUHERD.LabelTransformer.LabelTransformer method)}
 
 \begin{fulllineitems}
-\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformations.vec2string}}\pysiglinewithargsret{\sphinxcode{KUHERD.LabelTransformations.}\sphinxbfcode{vec2string}}{\emph{label\_vec}, \emph{label\_type}}{}
+\phantomsection\label{\detokenize{KUHERD:KUHERD.LabelTransformer.LabelTransformer.vec2string}}\pysiglinewithargsret{\sphinxbfcode{vec2string}}{\emph{label\_vec}}{}
 Converts vector containing integers to a string representation using the label set dictionaries.
-\begin{description}
-\item[{Args:}] \leavevmode
-label\_vec (list): A vector containing integer values mapping to members of the label\_type.
-label\_type (str): Specifies label\_type of label\_vec, either `purpose' and `field'.
+Args:
+\begin{quote}
 
+label\_vec (list): A vector containing integer values mapping to members of the label\_type.
+\end{quote}
+\begin{description}
 \item[{Return:}] \leavevmode
-(list): A list of strings that are members oif the label\_type.
+(list): A list of strings that are members of the label\_type.
 
 \end{description}
+
+\end{fulllineitems}
+
 
 \end{fulllineitems}
 
@@ -698,7 +708,7 @@ X (numpy matrix): Data samples to run feature selection on.
 
 
 \section{Module contents}
-\label{\detokenize{KUHERD:module-contents}}\label{\detokenize{KUHERD:module-KUHERD}}\index{KUHERD (module)}
+\label{\detokenize{KUHERD:module-KUHERD}}\label{\detokenize{KUHERD:module-contents}}\index{KUHERD (module)}
 
 \chapter{Indices and tables}
 \label{\detokenize{index:indices-and-tables}}\begin{itemize}
@@ -719,21 +729,11 @@ X (numpy matrix): Data samples to run feature selection on.
 \def\bigletter#1{{\Large\sffamily#1}\nopagebreak\vspace{1mm}}
 \bigletter{k}
 \item {\sphinxstyleindexentry{KUHERD}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD}}
-\item {\sphinxstyleindexentry{KUHERD.Experiments}}\sphinxstyleindexpageref{KUHERD.Experiments:\detokenize{module-KUHERD.Experiments}}
-\item {\sphinxstyleindexentry{KUHERD.Experiments.MultiDT}}\sphinxstyleindexpageref{KUHERD.Experiments:\detokenize{module-KUHERD.Experiments.MultiDT}}
-\item {\sphinxstyleindexentry{KUHERD.Experiments.MultiLR}}\sphinxstyleindexpageref{KUHERD.Experiments:\detokenize{module-KUHERD.Experiments.MultiLR}}
-\item {\sphinxstyleindexentry{KUHERD.Experiments.MultiNB}}\sphinxstyleindexpageref{KUHERD.Experiments:\detokenize{module-KUHERD.Experiments.MultiNB}}
-\item {\sphinxstyleindexentry{KUHERD.Experiments.MultiRF}}\sphinxstyleindexpageref{KUHERD.Experiments:\detokenize{module-KUHERD.Experiments.MultiRF}}
-\item {\sphinxstyleindexentry{KUHERD.Experiments.MultiSVM}}\sphinxstyleindexpageref{KUHERD.Experiments:\detokenize{module-KUHERD.Experiments.MultiSVM}}
 \item {\sphinxstyleindexentry{KUHERD.FeatureSelector}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.FeatureSelector}}
 \item {\sphinxstyleindexentry{KUHERD.HerdVectorizer}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.HerdVectorizer}}
-\item {\sphinxstyleindexentry{KUHERD.LabelSets}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.LabelSets}}
-\item {\sphinxstyleindexentry{KUHERD.LabelTransformations}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.LabelTransformations}}
+\item {\sphinxstyleindexentry{KUHERD.LabelTransformer}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.LabelTransformer}}
 \item {\sphinxstyleindexentry{KUHERD.Models}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.Models}}
 \item {\sphinxstyleindexentry{KUHERD.MultiFeatureSelector}}\sphinxstyleindexpageref{KUHERD:\detokenize{module-KUHERD.MultiFeatureSelector}}
-\item {\sphinxstyleindexentry{KUHERD.Tools}}\sphinxstyleindexpageref{KUHERD.Tools:\detokenize{module-KUHERD.Tools}}
-\item {\sphinxstyleindexentry{KUHERD.Tools.makePredictions}}\sphinxstyleindexpageref{KUHERD.Tools:\detokenize{module-KUHERD.Tools.makePredictions}}
-\item {\sphinxstyleindexentry{KUHERD.Tools.trainModel}}\sphinxstyleindexpageref{KUHERD.Tools:\detokenize{module-KUHERD.Tools.trainModel}}
 \end{sphinxtheindex}
 
 \renewcommand{\indexname}{Index}

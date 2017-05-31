@@ -42,10 +42,20 @@
           <div class="body" role="main">
             
   <h1>Source code for KUHERD.Models</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">.. moduleauthor:: Joseph St.Amand &lt;josephstamand@gmail.com&gt;</span>
+<span></span><span class="c1">#    Copyright (C) 2017  Joseph St.Amand</span>
 
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="c1">#    This program is free software: you can redistribute it and/or modify</span>
+<span class="c1">#    it under the terms of the GNU General Public License as published by</span>
+<span class="c1">#    the Free Software Foundation, either version 3 of the License, or</span>
+<span class="c1">#    (at your option) any later version.</span>
+
+<span class="c1">#    This program is distributed in the hope that it will be useful,</span>
+<span class="c1">#    but WITHOUT ANY WARRANTY; without even the implied warranty of</span>
+<span class="c1">#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the</span>
+<span class="c1">#    GNU General Public License for more details.</span>
+
+<span class="c1">#    You should have received a copy of the GNU General Public License</span>
+<span class="c1">#    along with this program.  If not, see &lt;http://www.gnu.org/licenses/&gt;.</span>
 
 <span class="kn">from</span> <span class="nn">collections</span> <span class="k">import</span> <span class="n">namedtuple</span>
 <span class="kn">import</span> <span class="nn">nltk</span>
@@ -61,7 +71,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">KUHERD.HerdVectorizer</span> <span class="k">import</span> <span class="n">HerdVectorizer</span>
-<span class="kn">from</span> <span class="nn">KUHERD.LabelTransformations</span> <span class="k">import</span> <span class="n">mat2vec</span>
+<span class="kn">from</span> <span class="nn">KUHERD.LabelTransformer</span> <span class="k">import</span> <span class="n">LabelTransformer</span>
 <span class="kn">from</span> <span class="nn">sklearn.linear_model</span> <span class="k">import</span> <span class="n">LogisticRegression</span>
 <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
 <span class="kn">from</span> <span class="nn">sklearn.svm</span> <span class="k">import</span> <span class="n">SVC</span>
@@ -79,6 +89,18 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model_config&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">=</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model&#39;</span><span class="p">]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># look for a non-default label set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">labelset</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="k">if</span> <span class="s1">&#39;labels&#39;</span> <span class="ow">in</span> <span class="n">config</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelset</span> <span class="o">=</span> <span class="n">LabelTransformer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_set</span><span class="p">,</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;labels&#39;</span><span class="p">])</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">labelset</span> <span class="o">=</span> <span class="n">LabelTransformer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_set</span><span class="p">,</span> <span class="n">LabelTransformer</span><span class="o">.</span><span class="n">default_labels</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">target_set</span><span class="p">))</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_set</span> <span class="o">!=</span> <span class="s1">&#39;purpose&#39;</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_set</span> <span class="o">!=</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;Unknown target_set configuration value: </span><span class="si">%s</span><span class="s1"> </span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">config</span><span class="p">[</span><span class="s1">&#39;target_set&#39;</span><span class="p">])</span>
+
 
         <span class="c1"># sort out which model the configuration contains</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span> <span class="o">==</span> <span class="s1">&#39;LogisticRegression&#39;</span><span class="p">:</span>
@@ -139,8 +161,9 @@
         <span class="n">config</span><span class="p">[</span><span class="s1">&#39;target_set&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">target_set</span>
         <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model_config&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_config</span>
         <span class="n">config</span><span class="p">[</span><span class="s1">&#39;model_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_name</span>
-        <span class="k">return</span> <span class="n">config</span></div></div>
+        <span class="n">config</span><span class="p">[</span><span class="s1">&#39;labelset&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">labelset</span>
 
+        <span class="k">return</span> <span class="n">config</span></div></div>
 
 
 <div class="viewcode-block" id="PurposeFieldModel"><a class="viewcode-back" href="../../KUHERD.html#KUHERD.Models.PurposeFieldModel">[docs]</a><span class="k">class</span> <span class="nc">PurposeFieldModel</span><span class="p">:</span>
@@ -181,8 +204,8 @@
         <span class="n">X_purpose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_vectorizer</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
         <span class="n">X_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_vectorizer</span><span class="o">.</span><span class="n">transform_data</span><span class="p">(</span><span class="n">abstracts</span><span class="p">)</span>
 
-        <span class="n">Y_purpose</span> <span class="o">=</span> <span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_purpose</span><span class="p">)</span>
-        <span class="n">Y_field</span> <span class="o">=</span> <span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_field</span><span class="p">)</span>
+        <span class="n">Y_purpose</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">purpose_model</span><span class="o">.</span><span class="n">labelset</span><span class="o">.</span><span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_purpose</span><span class="p">)</span>
+        <span class="n">Y_field</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">field_model</span><span class="o">.</span><span class="n">labelset</span><span class="o">.</span><span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_field</span><span class="p">)</span>
 
         <span class="bp">self</span><span class="o">.</span><span class="n">purpose_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_purpose</span><span class="p">,</span> <span class="n">Y_purpose</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">field_model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_field</span><span class="p">,</span> <span class="n">Y_field</span><span class="p">)</span>

@@ -28,18 +28,10 @@ KUHERD\.HerdVectorizer module
     :undoc-members:
     :show-inheritance:
 
-KUHERD\.LabelSets module
-------------------------
-
-.. automodule:: KUHERD.LabelSets
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
-KUHERD\.LabelTransformations module
+KUHERD\.LabelTransformer module
 -----------------------------------
 
-.. automodule:: KUHERD.LabelTransformations
+.. automodule:: KUHERD.LabelTransformer
     :members:
     :undoc-members:
     :show-inheritance:

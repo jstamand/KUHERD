@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.16)  9 MAY 2017 15:58
+This is pdfTeX, Version 3.14159265-2.6-1.40.17 (TeX Live 2016) (preloaded format=pdflatex 2017.3.16)  31 MAY 2017 11:54
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1170,7 +1170,7 @@ Underfull \hbox (badness 10000) in paragraph at lines 445--450
  []
 
 [4] [5]
-Underfull \hbox (badness 10000) in paragraph at lines 662--662
+Underfull \hbox (badness 10000) in paragraph at lines 672--672
 []\T1/ptm/m/it/10 scoring_function\T1/ptm/m/n/10 , \T1/ptm/m/it/10 kbest\T1/ptm
 /m/n/10 ,
  []
@@ -1208,145 +1208,165 @@ Underfull \hbox (badness 10000) in paragraph at lines 7--8
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 12--13
+Overfull \hbox (28.91994pt too wide) in paragraph at lines 11--12
+[]\T1/ptm/m/n/10 default_labels() (KUHERD.LabelTransformer.LabelTransformer
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 16--17
 []\T1/ptm/m/n/10 filter_docs() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (6.43944pt too wide) in paragraph at lines 16--17
+Overfull \hbox (6.43944pt too wide) in paragraph at lines 20--21
 []\T1/ptm/m/n/10 fit() (KUHERD.MultiFeatureSelector.MultiFeatureSelector
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 17--18
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
 []\T1/ptm/m/n/10 form_bigram_count_matrix()
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 17--18
+Underfull \hbox (badness 10000) in paragraph at lines 21--22
 \T1/ptm/m/n/10 (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (28.05006pt too wide) in paragraph at lines 18--19
+Overfull \hbox (28.05006pt too wide) in paragraph at lines 22--23
 []\T1/ptm/m/n/10 form_count_matrix() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (25.83025pt too wide) in paragraph at lines 22--23
+Overfull \hbox (25.83025pt too wide) in paragraph at lines 26--27
 []\T1/ptm/m/n/10 get_bigram_config() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 23--24
+Underfull \hbox (badness 10000) in paragraph at lines 27--28
 []\T1/ptm/m/n/10 get_config() (KUHERD.Models.ClassificationModel
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 24--25
+Underfull \hbox (badness 10000) in paragraph at lines 28--29
 []\T1/ptm/m/n/10 get_config() (KUHERD.Models.PurposeFieldModel
  []
 
 
-Overfull \hbox (28.04036pt too wide) in paragraph at lines 25--26
+Overfull \hbox (28.04036pt too wide) in paragraph at lines 29--30
 []\T1/ptm/m/n/10 get_preproc_config() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 26--27
+Underfull \hbox (badness 10000) in paragraph at lines 30--31
 []\T1/ptm/m/n/10 getConfig() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 53--54
-[]\T1/ptm/m/n/10 label2mat() (in mod-ule
+Overfull \hbox (12.36014pt too wide) in paragraph at lines 56--57
+[]\T1/ptm/m/n/10 label2mat() (KUHERD.LabelTransformer.LabelTransformer
  []
 
 
-Overfull \hbox (25.25966pt too wide) in paragraph at lines 54--55
+Underfull \hbox (badness 10000) in paragraph at lines 57--58
+[]\T1/ptm/m/n/10 LabelTransformer (class in
+ []
+
+
+Overfull \hbox (25.25966pt too wide) in paragraph at lines 58--59
 []\T1/ptm/m/n/10 lancaster_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 63--64
-[]\T1/ptm/m/n/10 MultiFeatureSelector (class in
+Overfull \hbox (6.65045pt too wide) in paragraph at lines 65--66
+[]\T1/ptm/m/n/10 mat2vec() (KUHERD.LabelTransformer.LabelTransformer
  []
 
 
 Underfull \hbox (badness 10000) in paragraph at lines 67--68
-[]\T1/ptm/m/n/10 MultiSVM() (in mod-ule
+[]\T1/ptm/m/n/10 MultiFeatureSelector (class in
  []
 
 [11
 
 ]
-Overfull \hbox (13.6pt too wide) in paragraph at lines 71--72
+Underfull \hbox (badness 10000) in paragraph at lines 71--72
+[]\T1/ptm/m/n/10 MultiSVM() (in mod-ule
+ []
+
+
+Overfull \hbox (13.6pt too wide) in paragraph at lines 75--76
 []\T1/ptm/m/n/10 porter_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 72--73
+Underfull \hbox (badness 10000) in paragraph at lines 76--77
 []\T1/ptm/m/n/10 predict() (KUHERD.Models.ClassificationModel
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 73--74
+Underfull \hbox (badness 10000) in paragraph at lines 77--78
 []\T1/ptm/m/n/10 predict() (KUHERD.Models.PurposeFieldModel
  []
 
 
-Overfull \hbox (24.72014pt too wide) in paragraph at lines 78--79
+Overfull \hbox (24.72014pt too wide) in paragraph at lines 82--83
 []\T1/ptm/m/n/10 set_bigram_config() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (30.24966pt too wide) in paragraph at lines 80--81
+Overfull \hbox (30.24966pt too wide) in paragraph at lines 84--85
 []\T1/ptm/m/n/10 set_feature_selector() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (26.93025pt too wide) in paragraph at lines 81--82
+Overfull \hbox (26.93025pt too wide) in paragraph at lines 85--86
 []\T1/ptm/m/n/10 set_preproc_config() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (0.82999pt too wide) in paragraph at lines 82--83
+Overfull \hbox (0.82999pt too wide) in paragraph at lines 86--87
 []\T1/ptm/m/n/10 set_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (25.57985pt too wide) in paragraph at lines 83--84
+Overfull \hbox (25.57985pt too wide) in paragraph at lines 87--88
 []\T1/ptm/m/n/10 snowball_stemmer() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Overfull \hbox (7.3903pt too wide) in paragraph at lines 87--88
+Overfull \hbox (7.3903pt too wide) in paragraph at lines 91--92
 []\T1/ptm/m/n/10 tokenize_docs() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 88--89
+Underfull \hbox (badness 10000) in paragraph at lines 92--93
 []\T1/ptm/m/n/10 train() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 89--90
+Underfull \hbox (badness 10000) in paragraph at lines 93--94
 []\T1/ptm/m/n/10 transform() (KUHERD.FeatureSelector.FeatureSelector
  []
 
 
-Overfull \hbox (36.9791pt too wide) in paragraph at lines 90--91
+Overfull \hbox (36.9791pt too wide) in paragraph at lines 94--95
 []\T1/ptm/m/n/10 transform() (KUHERD.MultiFeatureSelector.MultiFeatureSelector
  []
 
 
-Overfull \hbox (10.82011pt too wide) in paragraph at lines 91--92
+Overfull \hbox (10.82011pt too wide) in paragraph at lines 95--96
 []\T1/ptm/m/n/10 transform_data() (KUHERD.HerdVectorizer.HerdVectorizer
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 96--97
-[]\T1/ptm/m/n/10 vec2string() (in mod-ule
+Overfull \hbox (6.65045pt too wide) in paragraph at lines 99--100
+[]\T1/ptm/m/n/10 vec2mat() (KUHERD.LabelTransformer.LabelTransformer
+ []
+
+
+Overfull \hbox (14.43036pt too wide) in paragraph at lines 100--101
+[]\T1/ptm/m/n/10 vec2string() (KUHERD.LabelTransformer.LabelTransformer
  []
 
 [12
@@ -1358,17 +1378,17 @@ Package atveryend Info: Empty hook `AfterLastShipout' on input line 741.
 Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 741.
 Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 741.
 Package rerunfilecheck Info: File `KUHERD.out' has not changed.
-(rerunfilecheck)             Checksum: 6C33E3B32698002C868CB310A0D060A8;4586.
+(rerunfilecheck)             Checksum: 1AB4B6B126F45941FC7D7C592D77281A;4393.
 Package atveryend Info: Empty hook `AtVeryVeryEnd' on input line 741.
  ) 
 Here is how much of TeX's memory you used:
  13837 strings out of 494946
- 192730 string characters out of 6180981
- 282374 words of memory out of 5000000
- 16744 multiletter control sequences out of 15000+600000
+ 192821 string characters out of 6180981
+ 282364 words of memory out of 5000000
+ 16743 multiletter control sequences out of 15000+600000
  49864 words of font info for 67 fonts, out of 8000000 for 9000
  15 hyphenation exceptions out of 8191
- 37i,11n,45p,347b,526s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 37i,12n,45p,347b,528s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/share/texlive/texmf-dist/fonts/enc/dvips/base/8r.enc}</usr/share/texliv
 e/texmf-dist/fonts/type1/urw/courier/ucrb8a.pfb></usr/share/texlive/texmf-dist/
 fonts/type1/urw/courier/ucrr8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/u
@@ -1377,10 +1397,10 @@ uhvbo8a.pfb></usr/share/texlive/texmf-dist/fonts/type1/urw/helvetic/uhvr8a.pfb>
 </usr/share/texlive/texmf-dist/fonts/type1/urw/times/utmb8a.pfb></usr/share/tex
 live/texmf-dist/fonts/type1/urw/times/utmr8a.pfb></usr/share/texlive/texmf-dist
 /fonts/type1/urw/times/utmri8a.pfb>
-Output written on KUHERD.pdf (16 pages, 115900 bytes).
+Output written on KUHERD.pdf (16 pages, 115001 bytes).
 PDF statistics:
- 387 PDF objects out of 1000 (max. 8388607)
- 355 compressed objects within 4 object streams
- 89 named destinations out of 1000 (max. 500000)
- 217 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 375 PDF objects out of 1000 (max. 8388607)
+ 343 compressed objects within 4 object streams
+ 90 named destinations out of 1000 (max. 500000)
+ 209 words of extra memory for PDF output out of 10000 (max. 10000000)
 

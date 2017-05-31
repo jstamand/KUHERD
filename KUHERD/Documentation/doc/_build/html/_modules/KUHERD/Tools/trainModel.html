@@ -42,21 +42,18 @@
           <div class="body" role="main">
             
   <h1>Source code for KUHERD.Tools.trainModel</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span><span class="s2">&quot;..&quot;</span><span class="p">))</span>
-
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 
 <span class="kn">from</span> <span class="nn">KUHERD.Models</span> <span class="k">import</span> <span class="n">PurposeFieldModel</span>
-<span class="kn">from</span> <span class="nn">KUHERD.LabelTransformations</span> <span class="k">import</span> <span class="n">vec2mat</span><span class="p">,</span> <span class="n">label2mat</span><span class="p">,</span> <span class="n">mat2vec</span>
 
 
-<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../KUHERD.Tools.html#KUHERD.Tools.trainModel.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
-    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Utility to make predictions on new data&#39;</span><span class="p">)</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../../../source/KUHERD.Tools.html#KUHERD.Tools.trainModel.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Utility to train a new prediction/field model on some data.&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--data&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;data&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;XLSX file containing input data&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--config&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;config&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Input configuration file&#39;</span><span class="p">)</span>
     <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--model&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;model&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;name of the model file to create&#39;</span><span class="p">)</span>
@@ -83,7 +80,6 @@
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Given input config file: </span><span class="si">%s</span><span class="s1"> does not exist!</span><span class="se">\n</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">args</span><span class="o">.</span><span class="n">config</span><span class="p">)</span>
         <span class="n">exit</span><span class="p">()</span>
 
-
     <span class="c1"># load the configuration and initialize the model</span>
     <span class="n">config</span> <span class="o">=</span> <span class="kc">None</span>
 
@@ -103,8 +99,8 @@
         <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;Expecting column named </span><span class="se">\&#39;</span><span class="s1">field</span><span class="se">\&#39;</span><span class="s1"> in given excel file!</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
 
     <span class="c1"># check that all the labels given are valid and convert to matrix form</span>
-    <span class="n">Y_purpose</span> <span class="o">=</span> <span class="n">label2mat</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]),</span> <span class="s1">&#39;purpose&#39;</span><span class="p">)</span>
-    <span class="n">Y_field</span> <span class="o">=</span> <span class="n">label2mat</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]),</span> <span class="s1">&#39;field&#39;</span><span class="p">)</span>
+    <span class="n">Y_purpose</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">purpose_model</span><span class="o">.</span><span class="n">labelset</span><span class="o">.</span><span class="n">label2mat</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;purpose&#39;</span><span class="p">]))</span>
+    <span class="n">Y_field</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">field_model</span><span class="o">.</span><span class="n">labelset</span><span class="o">.</span><span class="n">label2mat</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;field&#39;</span><span class="p">]))</span>
 
     <span class="n">abstracts</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;sow&#39;</span><span class="p">])</span>
 

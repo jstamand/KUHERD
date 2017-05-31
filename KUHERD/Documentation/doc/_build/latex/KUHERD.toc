@@ -17,11 +17,10 @@
 \contentsline {section}{\numberline {1.2}Submodules}{2}{section.1.2}
 \contentsline {section}{\numberline {1.3}KUHERD.FeatureSelector module}{2}{section.1.3}
 \contentsline {section}{\numberline {1.4}KUHERD.HerdVectorizer module}{2}{section.1.4}
-\contentsline {section}{\numberline {1.5}KUHERD.LabelSets module}{4}{section.1.5}
-\contentsline {section}{\numberline {1.6}KUHERD.LabelTransformations module}{4}{section.1.6}
-\contentsline {section}{\numberline {1.7}KUHERD.Models module}{5}{section.1.7}
-\contentsline {section}{\numberline {1.8}KUHERD.MultiFeatureSelector module}{6}{section.1.8}
-\contentsline {section}{\numberline {1.9}Module contents}{6}{section.1.9}
+\contentsline {section}{\numberline {1.5}KUHERD.LabelTransformer module}{4}{section.1.5}
+\contentsline {section}{\numberline {1.6}KUHERD.Models module}{5}{section.1.6}
+\contentsline {section}{\numberline {1.7}KUHERD.MultiFeatureSelector module}{6}{section.1.7}
+\contentsline {section}{\numberline {1.8}Module contents}{6}{section.1.8}
 \contentsline {chapter}{\numberline {2}Indices and tables}{7}{chapter.2}
-\contentsline {chapter}{Python Module Index}{9}{section*.49}
-\contentsline {chapter}{Index}{11}{section*.50}
+\contentsline {chapter}{Python Module Index}{9}{section*.51}
+\contentsline {chapter}{Index}{11}{section*.52}

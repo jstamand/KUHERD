@@ -42,24 +42,21 @@
           <div class="body" role="main">
             
   <h1>Source code for KUHERD.Experiments.MultiDT</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">sys</span>
+<span></span><span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">os</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span><span class="s2">&quot;..&quot;</span><span class="p">))</span>
 
-<span class="kn">import</span> <span class="nn">argparse</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">pandas</span>
+<span class="kn">import</span> <span class="nn">sklearn.metrics</span> <span class="k">as</span> <span class="nn">skmetrics</span>
 <span class="kn">import</span> <span class="nn">yaml</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="k">import</span> <span class="n">GridSearchCV</span>
 <span class="kn">from</span> <span class="nn">sklearn.tree</span> <span class="k">import</span> <span class="n">DecisionTreeClassifier</span>
-<span class="kn">import</span> <span class="nn">sklearn.metrics</span> <span class="k">as</span> <span class="nn">skmetrics</span>
 
-<span class="kn">from</span> <span class="nn">KUHERD</span> <span class="k">import</span> <span class="n">LabelSets</span>
+<span class="kn">from</span> <span class="nn">KUHERD</span> <span class="k">import</span> <span class="n">LabelTransformer</span>
 <span class="kn">from</span> <span class="nn">KUHERD.HerdVectorizer</span> <span class="k">import</span> <span class="n">HerdVectorizer</span>
-<span class="kn">from</span> <span class="nn">KUHERD.LabelTransformations</span> <span class="k">import</span> <span class="n">vec2mat</span><span class="p">,</span> <span class="n">label2mat</span><span class="p">,</span> <span class="n">mat2vec</span>
 
 
-<div class="viewcode-block" id="MultiDT"><a class="viewcode-back" href="../../../KUHERD.Experiments.html#KUHERD.Experiments.MultiDT.MultiDT">[docs]</a><span class="k">def</span> <span class="nf">MultiDT</span><span class="p">():</span>
+<div class="viewcode-block" id="MultiDT"><a class="viewcode-back" href="../../../source/KUHERD.Experiments.html#KUHERD.Experiments.MultiDT.MultiDT">[docs]</a><span class="k">def</span> <span class="nf">MultiDT</span><span class="p">():</span>
     <span class="sd">&quot;&quot;&quot; Program for running an experiment using Decision Tree classifier.&quot;&quot;&quot;</span>
 
     <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s1">&#39;Simple Decision Tree Search&#39;</span><span class="p">)</span>
@@ -72,7 +69,7 @@
     <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-g&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">)</span>
     <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;-d&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;dataset&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;dataset(xlsx or hdf5)&#39;</span><span class="p">)</span>
 
-    <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--target_set&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;target_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;purpose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;target set for prediction, {purpose, field, both}&#39;</span><span class="p">)</span>
+    <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--target_set&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;target_set&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;purpose&#39;</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;target set for prediction, {purpose, field, custom}&#39;</span><span class="p">)</span>
     <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--stemmer&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;stemmer&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
     <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--tok_min_df&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;token_min_df&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Min. doc. freq. of tokens&#39;</span><span class="p">)</span>
     <span class="n">clf_parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--tok_max_df&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;token_max_df&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Max. doc. freq. of tokens&#39;</span><span class="p">)</span>
@@ -105,11 +102,11 @@
     <span class="c1"># retrieve the label set</span>
     <span class="n">label_set</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">if</span> <span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span> <span class="o">==</span> <span class="s1">&#39;purpose&#39;</span><span class="p">:</span>
-        <span class="n">label_set</span> <span class="o">=</span> <span class="n">LabelSets</span><span class="o">.</span><span class="n">purpose</span>
+        <span class="n">label_set</span> <span class="o">=</span> <span class="n">LabelTransformer</span><span class="p">(</span><span class="n">LabelTransformer</span><span class="o">.</span><span class="n">default_labels</span><span class="p">(</span><span class="s1">&#39;purpose&#39;</span><span class="p">))</span>
     <span class="k">elif</span> <span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span> <span class="o">==</span> <span class="s1">&#39;field&#39;</span><span class="p">:</span>
-        <span class="n">label_set</span> <span class="o">=</span> <span class="n">LabelSets</span><span class="o">.</span><span class="n">field</span>
-    <span class="k">elif</span> <span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span> <span class="o">==</span> <span class="s1">&#39;both&#39;</span><span class="p">:</span>
-        <span class="n">label_set</span> <span class="o">=</span> <span class="n">LabelSets</span><span class="o">.</span><span class="n">purpose</span> <span class="o">+</span> <span class="n">LabelSets</span><span class="o">.</span><span class="n">field</span>
+        <span class="n">label_set</span> <span class="o">=</span> <span class="n">LabelTransformer</span><span class="p">(</span><span class="n">LabelTransformer</span><span class="o">.</span><span class="n">default_labels</span><span class="p">(</span><span class="s1">&#39;field&#39;</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span> <span class="o">==</span> <span class="s1">&#39;custom&#39;</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">&#39;TODO: implement custom label set here!&#39;</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;target_set invalid!&#39;</span><span class="p">)</span>
         <span class="n">exit</span><span class="p">()</span>
@@ -121,8 +118,11 @@
     <span class="n">Y_train</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_train</span><span class="p">[</span><span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span><span class="p">])</span>
     <span class="n">Y_test</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">df_test</span><span class="p">[</span><span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span><span class="p">])</span>
 
-    <span class="n">Y_train</span> <span class="o">=</span> <span class="n">label2mat</span><span class="p">(</span><span class="n">Y_train</span><span class="p">,</span> <span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span><span class="p">)</span>
-    <span class="n">Y_test</span> <span class="o">=</span> <span class="n">label2mat</span><span class="p">(</span><span class="n">Y_test</span><span class="p">,</span> <span class="n">clf_args</span><span class="o">.</span><span class="n">target_set</span><span class="p">)</span>
+    <span class="n">Y_train</span> <span class="o">=</span> <span class="n">label_set</span><span class="o">.</span><span class="n">label2mat</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
+    <span class="n">Y_test</span> <span class="o">=</span> <span class="n">label_set</span><span class="o">.</span><span class="n">label2mat</span><span class="p">(</span><span class="n">Y_test</span><span class="p">)</span>
+
+    <span class="c1">#Y_train = label2mat(Y_train, clf_args.target_set)</span>
+    <span class="c1">#Y_test = label2mat(Y_test, clf_args.target_set)</span>
 
     <span class="c1"># prepare the vectorizer and vectorize the data</span>
     <span class="n">myVec</span> <span class="o">=</span> <span class="n">HerdVectorizer</span><span class="p">()</span>
@@ -160,7 +160,7 @@
     <span class="n">params</span><span class="p">[</span><span class="s1">&#39;min_samples_leaf&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">]</span>
     <span class="n">params</span><span class="p">[</span><span class="s1">&#39;class_weight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;balanced&#39;</span><span class="p">]</span>
 
-    <span class="n">y_train</span> <span class="o">=</span> <span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
+    <span class="n">y_train</span> <span class="o">=</span> <span class="n">label_set</span><span class="o">.</span><span class="n">mat2vec</span><span class="p">(</span><span class="n">Y_train</span><span class="p">)</span>
 
     <span class="n">grid</span> <span class="o">=</span> <span class="n">GridSearchCV</span><span class="p">(</span><span class="n">estimator</span><span class="o">=</span><span class="n">DecisionTreeClassifier</span><span class="p">(),</span> <span class="n">param_grid</span><span class="o">=</span><span class="n">params</span><span class="p">,</span> <span class="n">cv</span><span class="o">=</span><span class="n">cv_folds</span><span class="p">,</span> <span class="n">n_jobs</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">scoring</span><span class="o">=</span><span class="s1">&#39;f1_weighted&#39;</span><span class="p">)</span>
     <span class="n">grid</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_validate</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>

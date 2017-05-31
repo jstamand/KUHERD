@@ -309,27 +309,32 @@ label_set (str): Specifies the label set so that the input &#8216;y&#8217; may b
 <dd></dd></dl>
 
 </div>
-<div class="section" id="module-KUHERD.LabelSets">
-<span id="kuherd-labelsets-module"></span><h2>KUHERD.LabelSets module<a class="headerlink" href="#module-KUHERD.LabelSets" title="Permalink to this headline">¶</a></h2>
-</div>
-<div class="section" id="module-KUHERD.LabelTransformations">
-<span id="kuherd-labeltransformations-module"></span><h2>KUHERD.LabelTransformations module<a class="headerlink" href="#module-KUHERD.LabelTransformations" title="Permalink to this headline">¶</a></h2>
-<dl class="function">
-<dt id="KUHERD.LabelTransformations.label2mat">
-<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">label2mat</code><span class="sig-paren">(</span><em>x</em>, <em>label_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#label2mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.label2mat" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts a vector of integers to a matrix of of zero-one valued columns.</p>
+<div class="section" id="module-KUHERD.LabelTransformer">
+<span id="kuherd-labeltransformer-module"></span><h2>KUHERD.LabelTransformer module<a class="headerlink" href="#module-KUHERD.LabelTransformer" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="KUHERD.LabelTransformer.LabelTransformer">
+<em class="property">class </em><code class="descclassname">KUHERD.LabelTransformer.</code><code class="descname">LabelTransformer</code><span class="sig-paren">(</span><em>label_set_name</em>, <em>labels</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformer.html#LabelTransformer"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformer.LabelTransformer" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">object</span></code></p>
+<dl class="method">
+<dt id="KUHERD.LabelTransformer.LabelTransformer.default_labels">
+<code class="descname">default_labels</code><span class="sig-paren">(</span><em>target_set</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformer.html#LabelTransformer.default_labels"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformer.LabelTransformer.default_labels" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="KUHERD.LabelTransformer.LabelTransformer.label2mat">
+<code class="descname">label2mat</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformer.html#LabelTransformer.label2mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformer.LabelTransformer.label2mat" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts a vector of strings to a matrix of of zero-one valued columns.</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd>label_vec (list): A vector containing integer values mapping to members of the label_type.
-label_type (str): Specifies label_type of label_vec, either &#8216;purpose&#8217; and &#8216;field&#8217;.</dd>
+<dd>x (list): A vector containing string values representing the labels.</dd>
 <dt>Return:</dt>
 <dd>(numpy matrix): A matrix of zero-one valued columns.</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="KUHERD.LabelTransformations.mat2vec">
-<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">mat2vec</code><span class="sig-paren">(</span><em>M</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#mat2vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.mat2vec" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="KUHERD.LabelTransformer.LabelTransformer.mat2vec">
+<code class="descname">mat2vec</code><span class="sig-paren">(</span><em>M</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformer.html#LabelTransformer.mat2vec"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformer.LabelTransformer.mat2vec" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a zero-one valued label matrix to an integer valued label vector.</p>
 <dl class="docutils">
 <dt>Args:</dt>
@@ -337,30 +342,31 @@ label_type (str): Specifies label_type of label_vec, either &#8216;purpose&#8217
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="KUHERD.LabelTransformations.vec2mat">
-<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">vec2mat</code><span class="sig-paren">(</span><em>x</em>, <em>label_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#vec2mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.vec2mat" title="Permalink to this definition">¶</a></dt>
+<dl class="method">
+<dt id="KUHERD.LabelTransformer.LabelTransformer.vec2mat">
+<code class="descname">vec2mat</code><span class="sig-paren">(</span><em>x</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformer.html#LabelTransformer.vec2mat"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformer.LabelTransformer.vec2mat" title="Permalink to this definition">¶</a></dt>
 <dd><p>Converts a vector of integers to a matrix of of zero-one valued columns.</p>
 <dl class="docutils">
 <dt>Args:</dt>
-<dd>x (list): A vector containing integer values mapping to members of the label_type.
-label_type (str): Specifies label_type of label_vec, either &#8216;purpose&#8217; and &#8216;field&#8217;.</dd>
+<dd>x (list): A vector containing integer values mapping to members of the label_type.</dd>
 <dt>Return:</dt>
 <dd>(numpy matrix): A matrix of zero-one valued columns.</dd>
 </dl>
 </dd></dl>
 
-<dl class="function">
-<dt id="KUHERD.LabelTransformations.vec2string">
-<code class="descclassname">KUHERD.LabelTransformations.</code><code class="descname">vec2string</code><span class="sig-paren">(</span><em>label_vec</em>, <em>label_type</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformations.html#vec2string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformations.vec2string" title="Permalink to this definition">¶</a></dt>
-<dd><p>Converts vector containing integers to a string representation using the label set dictionaries.</p>
+<dl class="method">
+<dt id="KUHERD.LabelTransformer.LabelTransformer.vec2string">
+<code class="descname">vec2string</code><span class="sig-paren">(</span><em>label_vec</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/KUHERD/LabelTransformer.html#LabelTransformer.vec2string"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#KUHERD.LabelTransformer.LabelTransformer.vec2string" title="Permalink to this definition">¶</a></dt>
+<dd><p>Converts vector containing integers to a string representation using the label set dictionaries.
+Args:</p>
+<blockquote>
+<div>label_vec (list): A vector containing integer values mapping to members of the label_type.</div></blockquote>
 <dl class="docutils">
-<dt>Args:</dt>
-<dd>label_vec (list): A vector containing integer values mapping to members of the label_type.
-label_type (str): Specifies label_type of label_vec, either &#8216;purpose&#8217; and &#8216;field&#8217;.</dd>
 <dt>Return:</dt>
-<dd>(list): A list of strings that are members oif the label_type.</dd>
+<dd>(list): A list of strings that are members of the label_type.</dd>
 </dl>
+</dd></dl>
+
 </dd></dl>
 
 </div>
@@ -503,8 +509,7 @@ label_set (str): Denotes if label set is of the &#8216;purpose&#8217; or &#8216;
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
 <li><a class="reference internal" href="#module-KUHERD.FeatureSelector">KUHERD.FeatureSelector module</a></li>
 <li><a class="reference internal" href="#module-KUHERD.HerdVectorizer">KUHERD.HerdVectorizer module</a></li>
-<li><a class="reference internal" href="#module-KUHERD.LabelSets">KUHERD.LabelSets module</a></li>
-<li><a class="reference internal" href="#module-KUHERD.LabelTransformations">KUHERD.LabelTransformations module</a></li>
+<li><a class="reference internal" href="#module-KUHERD.LabelTransformer">KUHERD.LabelTransformer module</a></li>
 <li><a class="reference internal" href="#module-KUHERD.Models">KUHERD.Models module</a></li>
 <li><a class="reference internal" href="#module-KUHERD.MultiFeatureSelector">KUHERD.MultiFeatureSelector module</a></li>
 <li><a class="reference internal" href="#module-KUHERD">Module contents</a></li>
