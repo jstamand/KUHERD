@@ -10,6 +10,10 @@ class LabelTransformer:
         if labels is None:
             labels = LabelTransformer.default_labels(label_set_name)
 
+        # remove duplicate labels and sort them alphabetically
+        labels = list(set(labels))
+        labels.sort()
+
         # form a dictionary of labels (and the inverse mapping)
         self.label_map = {}
         self.index_map = {}
@@ -27,7 +31,7 @@ class LabelTransformer:
                 (list): A list of strings that are members of the label_type.
             """
 
-        converted_labels = [self.label_map[x] for x in label_vec]
+        converted_labels = [self.index_map[x] for x in label_vec]
         return converted_labels
 
 
@@ -48,7 +52,11 @@ class LabelTransformer:
         M = np.zeros([n, p])
         for i, val in enumerate(x):
             val = val.lower().strip()
-            label_value = self.label_map[val] - 1
+            try:
+                label_value = self.label_map[val]
+            except KeyError:
+                raise ValueError('Unknown label given: %s \n' % val)
+
             M[i, label_value] = 1
 
         return M
@@ -76,7 +84,7 @@ class LabelTransformer:
 
         M = np.zeros([n, p])
         for i, val in enumerate(x):
-            M[i, int(val) - 1] = 1
+            M[i, int(val)] = 1
 
         return M
 
@@ -94,11 +102,11 @@ class LabelTransformer:
 
         y = np.zeros([n])
         for row, col in zip(r, c):
-            y[row] = int(col + 1)
+            y[row] = int(col)
         return y
 
 
-    def default_labels(self, target_set):
+    def default_labels(target_set):
 
         if target_set == 'field':
             return {'a1': 1, 'a2': 2, 'a3': 3, 'a4': 4, 'a5': 5, 'a6': 6, 'a7': 7, 'a8': 8, 'a9': 9, 'b1': 10, 'b2': 11, 'b3': 12,

@@ -13,7 +13,6 @@ def main():
     parser.add_argument('--data', dest='data', type=str, help='XLSX file containing input data')
     parser.add_argument('--config', dest='config', type=str, help='Input configuration file')
     parser.add_argument('--model', dest='model', type=str, help='name of the model file to create')
-    parser.add_argument('--labels', dest='labels', type=str, help='')
     args = parser.parse_args()
 
     # check that all argument are available
@@ -27,10 +26,6 @@ def main():
         print('--config option required!\n')
         exit()
 
-    # label argument is optional
-    if args.labels is None:
-        print('Using default label set\n')
-
     # check that the input data given exists
     if not os.path.isfile(args.data):
         print('Given input data file: %s does not exist!\n' % args.data)
@@ -39,11 +34,6 @@ def main():
     # check that the input config given exists
     if not os.path.isfile(args.config):
         print('Given input config file: %s does not exist!\n' % args.config)
-        exit()
-
-    # check that the input label set exists
-    if not os.path.isfile(args.labels):
-        print('Given input config file: %s does not exist!\n' % args.labels)
         exit()
 
     # load the configuration and initialize the model
@@ -65,8 +55,8 @@ def main():
         sys.exit('Expecting column named \'field\' in given excel file!\n')
 
     # check that all the labels given are valid and convert to matrix form
-    Y_purpose = model.purpose_model.label2mat(list(df['purpose']))
-    Y_field = model.field_model.label2mat(list(df['field']))
+    Y_purpose = model.purpose_model.labelset.label2mat(list(df['purpose']))
+    Y_field = model.field_model.labelset.label2mat(list(df['field']))
 
     abstracts = list(df['sow'])
 

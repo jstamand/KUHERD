@@ -27,7 +27,7 @@ import pickle
 import numpy as np
 import sys
 from KUHERD.HerdVectorizer import HerdVectorizer
-from KUHERD.LabelTransformations import mat2vec
+from KUHERD.LabelTransformer import LabelTransformer
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.svm import SVC
@@ -45,6 +45,18 @@ class ClassificationModel:
         self.model_config = config['model_config']
         self.model_name = config['model']
         self.model = None
+
+        # look for a non-default label set
+        self.labelset = None
+
+        if 'labels' in config.keys():
+            self.labelset = LabelTransformer(self.target_set, config['labels'])
+        else:
+            self.labelset = LabelTransformer(self.target_set, LabelTransformer.default_labels(self.target_set))
+
+        if self.target_set != 'purpose' and self.target_set != 'field':
+            raise ValueError('Unknown target_set configuration value: %s \n' % config['target_set'])
+
 
         # sort out which model the configuration contains
         if self.model_name == 'LogisticRegression':
@@ -105,8 +117,9 @@ class ClassificationModel:
         config['target_set'] = self.target_set
         config['model_config'] = self.model_config
         config['model_name'] = self.model_name
-        return config
+        config['labelset'] = self.labelset
 
+        return config
 
 
 class PurposeFieldModel:
@@ -147,8 +160,8 @@ class PurposeFieldModel:
         X_purpose = self.purpose_vectorizer.transform_data(abstracts)
         X_field = self.field_vectorizer.transform_data(abstracts)
 
-        Y_purpose = mat2vec(Y_purpose)
-        Y_field = mat2vec(Y_field)
+        Y_purpose = self.purpose_model.labelset.mat2vec(Y_purpose)
+        Y_field = self.field_model.labelset.mat2vec(Y_field)
 
         self.purpose_model.fit(X_purpose, Y_purpose)
         self.field_model.fit(X_field, Y_field)
